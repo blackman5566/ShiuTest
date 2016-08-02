@@ -100,7 +100,7 @@
     // 判斷是否靠近螢幕的右邊邊緣
     if (touchPoint.x > ([UIScreen mainScreen].bounds.size.width - DashLineWidth)) {
         if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateDisplacementAmount) userInfo:nil repeats:YES];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateDisplacementAmount) userInfo:nil repeats:YES];
         }
     }
     else {
@@ -110,10 +110,30 @@
 }
 
 - (void)updateDisplacementAmount {
-    // 開始計算位移
-    self.displacementAmount += DashLineWidth;
-    CGPoint position = CGPointMake(self.displacementAmount, 0);
-    [self.scrollView setContentOffset:position animated:YES];
+
+//    if ((self.scrollView.contentOffset.x + [UIScreen mainScreen].bounds.size.width)) {
+//        // 開始計算位移
+//        self.displacementAmount += DashLineWidth;
+//        CGPoint position = CGPointMake(self.displacementAmount, 0);
+//        [self.scrollView setContentOffset:position animated:YES];
+//    }
+
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    CGFloat contentYoffset = self.scrollView.contentOffset.x;
+    CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
+    NSLog(@"distanceFromRight = %f", distanceFromRight);
+    NSLog(@"width = %f", width);
+    
+    if (distanceFromRight == width) {
+
+        NSLog(@"end of table");
+
+    }
+    else {
+        self.displacementAmount += DashLineWidth;
+        CGPoint position = CGPointMake(self.displacementAmount, 0);
+        [self.scrollView setContentOffset:position animated:YES];
+    }
 }
 
 - (void)setVerticalSelectionViewVisible:(BOOL)verticalSelectionViewVisible animated:(BOOL)animated {
