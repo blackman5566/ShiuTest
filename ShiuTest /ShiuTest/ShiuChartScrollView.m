@@ -19,44 +19,53 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) CGFloat displacementAmount;
+@property (nonatomic, strong) ShiuChartView *chartView;
+
+@property (nonatomic, strong) NSArray *xValue;
+@property (nonatomic, strong) NSArray *yValue;
+
 @end
 
 @implementation ShiuChartScrollView
 
+#pragma mark - life cycle
+
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-
-        CGRect graphViewFrame = frame;
-        graphViewFrame.origin.x = 0;
-        graphViewFrame.origin.y = 0;
-        graphViewFrame.size.height = frame.size.height - 20;
-        NSArray *x = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", @"12", @"13", @"14", @"15", @"16", @"17", @"18", @"19", @"20", @"21", @"22", @"23", @"24", @"25", @"26"];
-        NSArray *y = @[@"10", @"16", @"14", @"40", @"0", @"4", @"80", @"39", @"4",
-                       @"6", @"7", @"25", @"40", @"0", @"4", @"80", @"39", @"4", @"6",
-                       @"7", @"25", @"10", @"40", @"60", @"23", @"25"];
-
-        //        NSArray *x = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10"];
-        //        NSArray *y = @[@"10", @"16", @"14", @"40", @"0", @"4", @"80", @"39", @"4", @"6"];
-
-        self.scrollView = [[UIScrollView alloc] initWithFrame:graphViewFrame];
-        self.scrollView.showsHorizontalScrollIndicator = NO;
-        self.scrollView.scrollEnabled = NO;
-        CGFloat width = MAX([UIScreen mainScreen].bounds.size.width, (x.count * DashLineWidth));
-        graphViewFrame.size.width = width;
-
-        ShiuChartView *chartView = [ShiuChartView initCharView:graphViewFrame];
-        chartView.xValues = x;
-        chartView.yValues = y;
-        chartView.chartColor = [UIColor blueColor];
-        self.scrollView.contentSize = CGSizeMake(chartView.frame.size.width, graphViewFrame.size.height);
-        [self.scrollView addSubview:chartView];
-        [self addSubview:self.scrollView];
-        self.displacementAmount = 0;
-
+        self.xValue = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", @"12", @"13", @"14", @"15", @"16", @"17", @"18", @"19", @"20", @"21", @"22", @"23", @"24", @"25", @"26"];
+        self.yValue = @[@"10", @"16", @"14", @"40", @"0", @"4", @"80", @"39", @"4",
+                        @"6", @"7", @"25", @"40", @"0", @"4", @"80", @"39", @"4", @"6",
+                        @"7", @"25", @"10", @"40", @"60", @"23", @"25"];
+        [self setupInitValue:frame];
     }
     return self;
 }
 
+- (void)setupInitValue:(CGRect)frame {
+    CGRect graphViewFrame = frame;
+    graphViewFrame.origin.x = 0;
+    graphViewFrame.origin.y = 0;
+    graphViewFrame.size.height = frame.size.height - 20;
+
+    //        NSArray *x = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10"];
+    //        NSArray *y = @[@"10", @"16", @"14", @"40", @"0", @"4", @"80", @"39", @"4", @"6"];
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:graphViewFrame];
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.scrollEnabled = NO;
+    CGFloat width = MAX([UIScreen mainScreen].bounds.size.width, (self.xValue.count * DashLineWidth));
+    graphViewFrame.size.width = width;
+
+    self.chartView = [ShiuChartView initCharView:graphViewFrame];
+    self.chartView.xValues = self.xValue;
+    self.chartView.yValues = self.yValue;
+    self.chartView.chartColor = [UIColor blueColor];
+    self.scrollView.contentSize = CGSizeMake(self.chartView.frame.size.width, graphViewFrame.size.height);
+    [self.scrollView addSubview:self.chartView];
+    [self addSubview:self.scrollView];
+    [self sendSubviewToBack:self.scrollView];
+    self.displacementAmount = 0;
+}
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     [self addVerticalSelectionView];
@@ -110,7 +119,6 @@
         }
     }
     else {
-        NSLog(@"dwqdq");
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
     }
 }
@@ -134,7 +142,7 @@
 - (void)updateLeftDisplacementAmount {
     // 開始向左滑動
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
-    // 判斷為一輛是否為0 當為0時就代表已經到頂了
+    // 判斷為一輛是否為0 當為0時就代表已經到頂了，當不是為0時就繼續滑動
     if (contentYoffset) {
         self.displacementAmount -= DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
@@ -150,6 +158,10 @@
 
 - (void)delayRequest {
     NSLog(@"delayRequest");
+    self.xValue = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10"];
+    self.yValue = @[@"71", @"26", @"35", @"44", @"51", @"64", @"37", @"18", @"92", @"29"];
+    [self.scrollView removeFromSuperview];
+    [self setupInitValue:self.frame];
 }
 
 - (void)setVerticalSelectionViewVisible:(BOOL)verticalSelectionViewVisible animated:(BOOL)animated {
