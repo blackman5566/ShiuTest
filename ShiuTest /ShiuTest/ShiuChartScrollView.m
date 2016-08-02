@@ -36,7 +36,7 @@
         self.xValue = [[NSMutableArray alloc] init];
         self.yValue = [[NSMutableArray alloc] init];
         double mult = 5 * 10.f;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i < 100; i++) {
             NSInteger val = (double)(arc4random_uniform(mult) + 3.0);
             [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
             val = (NSInteger)(arc4random_uniform(mult) + 3.0);

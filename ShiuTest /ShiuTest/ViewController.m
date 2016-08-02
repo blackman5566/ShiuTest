@@ -52,10 +52,17 @@
     //[self setupShiuBarChartView];
     // 第二版
     //[self setupShiuBarChartViewV2];
-    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.backgroundColor = [UIColor redColor];
+    btn.frame = CGRectMake(0,400,200,50); // x,y自行設定
+    btn.layer.borderColor = [UIColor blackColor].CGColor; //設定邊線顏色
+    btn.layer.masksToBounds = YES;  //這行要有才能顯示出來
+    btn.layer.cornerRadius =30.0f; //邊角15.0f，自行設定邊角圓弧度
+    [self.view addSubview:btn];
     // 折線圖
     [self setupShiuChartView];
 }
+
 -(void)setupShiuChartView{
     // 使用方法
     

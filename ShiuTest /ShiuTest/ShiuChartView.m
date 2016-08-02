@@ -125,7 +125,6 @@
             // 將字畫上去
             NSString *xValue = values[i];
             CGSize size = [xValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDict context:nil].size;
-
             if ((i % 2 == 0)) {
                 [xValue drawAtPoint:CGPointMake(cX - size.width * 0.5, cY - 6) withAttributes:self.textStyleDict];
             }
