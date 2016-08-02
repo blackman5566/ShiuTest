@@ -17,16 +17,16 @@
 		2E8AB88B1D3DBBBF002E3F4A /* TPPropertyAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB8891D3DBBBF002E3F4A /* TPPropertyAnimation.m */; };
 		2E8AB88E1D3DF772002E3F4A /* ShiuBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB88D1D3DF772002E3F4A /* ShiuBarChartView.m */; };
 		2E8AB8901D3DF784002E3F4A /* ShiuBarChartView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E8AB88F1D3DF784002E3F4A /* ShiuBarChartView.xib */; };
-		2E8AB9271D45E040002E3F4A /* ShiuBarChartViewV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9261D45E040002E3F4A /* ShiuBarChartViewV2.m */; };
-		2E8AB92A1D45E145002E3F4A /* ShiuLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9291D45E145002E3F4A /* ShiuLegendView.m */; };
-		2E8AB92E1D45E186002E3F4A /* ShiuBarChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB92D1D45E186002E3F4A /* ShiuBarChartData.m */; };
-		2E8AB9311D45E291002E3F4A /* ShiuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9301D45E291002E3F4A /* ShiuBar.m */; };
-		2E8AB9341D45EB79002E3F4A /* ShiuBarChartDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9331D45EB79002E3F4A /* ShiuBarChartDataSet.m */; };
 		2EE43A101D4748F100CF3A0F /* ShiuChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A0F1D4748F100CF3A0F /* ShiuChartView.m */; };
 		2EE43A1B1D49E06400CF3A0F /* ShiuCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A1A1D49E06400CF3A0F /* ShiuCircleView.m */; };
 		2EE43A1E1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A1D1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m */; };
 		2EE43A261D4ED8FC00CF3A0F /* ShiuChartScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A251D4ED8FC00CF3A0F /* ShiuChartScrollView.m */; };
 		2EE43A291D501F1000CF3A0F /* ShiuVerticalSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A281D501F1000CF3A0F /* ShiuVerticalSelectionView.m */; };
+		2EE43A341D5041FC00CF3A0F /* ShiuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A2B1D5041FC00CF3A0F /* ShiuBar.m */; };
+		2EE43A351D5041FC00CF3A0F /* ShiuBarChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A2D1D5041FC00CF3A0F /* ShiuBarChartData.m */; };
+		2EE43A361D5041FC00CF3A0F /* ShiuBarChartDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A2F1D5041FC00CF3A0F /* ShiuBarChartDataSet.m */; };
+		2EE43A371D5041FC00CF3A0F /* ShiuBarChartViewV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A311D5041FC00CF3A0F /* ShiuBarChartViewV2.m */; };
+		2EE43A381D5041FC00CF3A0F /* ShiuLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A331D5041FC00CF3A0F /* ShiuLegendView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,16 +47,6 @@
 		2E8AB88C1D3DF772002E3F4A /* ShiuBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartView.h; sourceTree = "<group>"; };
 		2E8AB88D1D3DF772002E3F4A /* ShiuBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartView.m; sourceTree = "<group>"; };
 		2E8AB88F1D3DF784002E3F4A /* ShiuBarChartView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShiuBarChartView.xib; sourceTree = "<group>"; };
-		2E8AB9251D45E040002E3F4A /* ShiuBarChartViewV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartViewV2.h; sourceTree = "<group>"; };
-		2E8AB9261D45E040002E3F4A /* ShiuBarChartViewV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartViewV2.m; sourceTree = "<group>"; };
-		2E8AB9281D45E145002E3F4A /* ShiuLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuLegendView.h; sourceTree = "<group>"; };
-		2E8AB9291D45E145002E3F4A /* ShiuLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuLegendView.m; sourceTree = "<group>"; };
-		2E8AB92C1D45E186002E3F4A /* ShiuBarChartData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartData.h; sourceTree = "<group>"; };
-		2E8AB92D1D45E186002E3F4A /* ShiuBarChartData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartData.m; sourceTree = "<group>"; };
-		2E8AB92F1D45E291002E3F4A /* ShiuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBar.h; sourceTree = "<group>"; };
-		2E8AB9301D45E291002E3F4A /* ShiuBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBar.m; sourceTree = "<group>"; };
-		2E8AB9321D45EB79002E3F4A /* ShiuBarChartDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartDataSet.h; sourceTree = "<group>"; };
-		2E8AB9331D45EB79002E3F4A /* ShiuBarChartDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartDataSet.m; sourceTree = "<group>"; };
 		2EE43A0E1D4748F100CF3A0F /* ShiuChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuChartView.h; sourceTree = "<group>"; };
 		2EE43A0F1D4748F100CF3A0F /* ShiuChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuChartView.m; sourceTree = "<group>"; };
 		2EE43A191D49E06400CF3A0F /* ShiuCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuCircleView.h; sourceTree = "<group>"; };
@@ -67,6 +57,16 @@
 		2EE43A251D4ED8FC00CF3A0F /* ShiuChartScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuChartScrollView.m; sourceTree = "<group>"; };
 		2EE43A271D501F1000CF3A0F /* ShiuVerticalSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuVerticalSelectionView.h; sourceTree = "<group>"; };
 		2EE43A281D501F1000CF3A0F /* ShiuVerticalSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuVerticalSelectionView.m; sourceTree = "<group>"; };
+		2EE43A2A1D5041FC00CF3A0F /* ShiuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuBar.h; path = ShiuTest/ShiuBarChartViewV2/ShiuBar.h; sourceTree = "<group>"; };
+		2EE43A2B1D5041FC00CF3A0F /* ShiuBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuBar.m; path = ShiuTest/ShiuBarChartViewV2/ShiuBar.m; sourceTree = "<group>"; };
+		2EE43A2C1D5041FC00CF3A0F /* ShiuBarChartData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuBarChartData.h; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartData.h; sourceTree = "<group>"; };
+		2EE43A2D1D5041FC00CF3A0F /* ShiuBarChartData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuBarChartData.m; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartData.m; sourceTree = "<group>"; };
+		2EE43A2E1D5041FC00CF3A0F /* ShiuBarChartDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuBarChartDataSet.h; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartDataSet.h; sourceTree = "<group>"; };
+		2EE43A2F1D5041FC00CF3A0F /* ShiuBarChartDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuBarChartDataSet.m; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartDataSet.m; sourceTree = "<group>"; };
+		2EE43A301D5041FC00CF3A0F /* ShiuBarChartViewV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuBarChartViewV2.h; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartViewV2.h; sourceTree = "<group>"; };
+		2EE43A311D5041FC00CF3A0F /* ShiuBarChartViewV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuBarChartViewV2.m; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartViewV2.m; sourceTree = "<group>"; };
+		2EE43A321D5041FC00CF3A0F /* ShiuLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuLegendView.h; path = ShiuTest/ShiuBarChartViewV2/ShiuLegendView.h; sourceTree = "<group>"; };
+		2EE43A331D5041FC00CF3A0F /* ShiuLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuLegendView.m; path = ShiuTest/ShiuBarChartViewV2/ShiuLegendView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,16 +165,16 @@
 		2E8AB91E1D45DF60002E3F4A /* ShiuBarChartView */ = {
 			isa = PBXGroup;
 			children = (
-				2E8AB9251D45E040002E3F4A /* ShiuBarChartViewV2.h */,
-				2E8AB9261D45E040002E3F4A /* ShiuBarChartViewV2.m */,
-				2E8AB9321D45EB79002E3F4A /* ShiuBarChartDataSet.h */,
-				2E8AB9331D45EB79002E3F4A /* ShiuBarChartDataSet.m */,
-				2E8AB9281D45E145002E3F4A /* ShiuLegendView.h */,
-				2E8AB9291D45E145002E3F4A /* ShiuLegendView.m */,
-				2E8AB92C1D45E186002E3F4A /* ShiuBarChartData.h */,
-				2E8AB92D1D45E186002E3F4A /* ShiuBarChartData.m */,
-				2E8AB92F1D45E291002E3F4A /* ShiuBar.h */,
-				2E8AB9301D45E291002E3F4A /* ShiuBar.m */,
+				2EE43A2A1D5041FC00CF3A0F /* ShiuBar.h */,
+				2EE43A2B1D5041FC00CF3A0F /* ShiuBar.m */,
+				2EE43A2C1D5041FC00CF3A0F /* ShiuBarChartData.h */,
+				2EE43A2D1D5041FC00CF3A0F /* ShiuBarChartData.m */,
+				2EE43A2E1D5041FC00CF3A0F /* ShiuBarChartDataSet.h */,
+				2EE43A2F1D5041FC00CF3A0F /* ShiuBarChartDataSet.m */,
+				2EE43A301D5041FC00CF3A0F /* ShiuBarChartViewV2.h */,
+				2EE43A311D5041FC00CF3A0F /* ShiuBarChartViewV2.m */,
+				2EE43A321D5041FC00CF3A0F /* ShiuLegendView.h */,
+				2EE43A331D5041FC00CF3A0F /* ShiuLegendView.m */,
 			);
 			name = ShiuBarChartView;
 			path = ..;
@@ -251,11 +251,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EE43A361D5041FC00CF3A0F /* ShiuBarChartDataSet.m in Sources */,
 				2E8AB88E1D3DF772002E3F4A /* ShiuBarChartView.m in Sources */,
 				2EE43A261D4ED8FC00CF3A0F /* ShiuChartScrollView.m in Sources */,
+				2EE43A341D5041FC00CF3A0F /* ShiuBar.m in Sources */,
+				2EE43A351D5041FC00CF3A0F /* ShiuBarChartData.m in Sources */,
 				2E8AB88B1D3DBBBF002E3F4A /* TPPropertyAnimation.m in Sources */,
-				2E8AB9311D45E291002E3F4A /* ShiuBar.m in Sources */,
-				2E8AB92A1D45E145002E3F4A /* ShiuLegendView.m in Sources */,
+				2EE43A371D5041FC00CF3A0F /* ShiuBarChartViewV2.m in Sources */,
 				2EE43A101D4748F100CF3A0F /* ShiuChartView.m in Sources */,
 				2E8AB86E1D3C880D002E3F4A /* ViewController.m in Sources */,
 				2EE43A1E1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m in Sources */,
@@ -263,9 +265,7 @@
 				2E8AB86B1D3C880D002E3F4A /* AppDelegate.m in Sources */,
 				2EE43A291D501F1000CF3A0F /* ShiuVerticalSelectionView.m in Sources */,
 				2EE43A1B1D49E06400CF3A0F /* ShiuCircleView.m in Sources */,
-				2E8AB9341D45EB79002E3F4A /* ShiuBarChartDataSet.m in Sources */,
-				2E8AB9271D45E040002E3F4A /* ShiuBarChartViewV2.m in Sources */,
-				2E8AB92E1D45E186002E3F4A /* ShiuBarChartData.m in Sources */,
+				2EE43A381D5041FC00CF3A0F /* ShiuLegendView.m in Sources */,
 				2E8AB8681D3C880D002E3F4A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
