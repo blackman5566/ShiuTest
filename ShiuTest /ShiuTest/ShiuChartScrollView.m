@@ -110,29 +110,40 @@
         }
     }
     else {
-
+        //
         //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
     }
 }
 
 - (void)updateRightDisplacementAmount {
+    // 開始向右滑動
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
-    if (distanceFromRight == width) {
+    if (roundf(distanceFromRight) == width) {
         [self.timer invalidate];
         self.timer = nil;
     }
-    else if ((distanceFromRight - width) >= DashLineWidth) {
+    else {
         self.displacementAmount += DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
-        [self.scrollView setContentOffset:position animated:YES];
+        [self.scrollView setContentOffset:position animated:NO];
     }
 }
 
 - (void)updateLeftDisplacementAmount {
+    // 開始向左滑動
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
-    NSLog(@"updateLeftDisplacementAmount = %f", contentYoffset);
+    // 判斷為一輛是否為0 當為0時就代表已經到頂了
+    if (contentYoffset) {
+        self.displacementAmount -= DashLineWidth;
+        CGPoint position = CGPointMake(self.displacementAmount, 0);
+        [self.scrollView setContentOffset:position animated:NO];
+    }
+    else {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 - (void)delayRequest {
