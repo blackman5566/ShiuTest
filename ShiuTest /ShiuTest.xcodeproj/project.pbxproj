@@ -1,0 +1,423 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E8AB8681D3C880D002E3F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB8671D3C880D002E3F4A /* main.m */; };
+		2E8AB86B1D3C880D002E3F4A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB86A1D3C880D002E3F4A /* AppDelegate.m */; };
+		2E8AB86E1D3C880D002E3F4A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB86D1D3C880D002E3F4A /* ViewController.m */; };
+		2E8AB8711D3C880D002E3F4A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E8AB86F1D3C880D002E3F4A /* Main.storyboard */; };
+		2E8AB8731D3C880D002E3F4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E8AB8721D3C880D002E3F4A /* Assets.xcassets */; };
+		2E8AB8761D3C880D002E3F4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E8AB8741D3C880D002E3F4A /* LaunchScreen.storyboard */; };
+		2E8AB88A1D3DBBBF002E3F4A /* KAProgressLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB8871D3DBBBF002E3F4A /* KAProgressLabel.m */; };
+		2E8AB88B1D3DBBBF002E3F4A /* TPPropertyAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB8891D3DBBBF002E3F4A /* TPPropertyAnimation.m */; };
+		2E8AB88E1D3DF772002E3F4A /* ShiuBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB88D1D3DF772002E3F4A /* ShiuBarChartView.m */; };
+		2E8AB8901D3DF784002E3F4A /* ShiuBarChartView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E8AB88F1D3DF784002E3F4A /* ShiuBarChartView.xib */; };
+		2E8AB9271D45E040002E3F4A /* ShiuBarChartViewV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9261D45E040002E3F4A /* ShiuBarChartViewV2.m */; };
+		2E8AB92A1D45E145002E3F4A /* ShiuLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9291D45E145002E3F4A /* ShiuLegendView.m */; };
+		2E8AB92E1D45E186002E3F4A /* ShiuBarChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB92D1D45E186002E3F4A /* ShiuBarChartData.m */; };
+		2E8AB9311D45E291002E3F4A /* ShiuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9301D45E291002E3F4A /* ShiuBar.m */; };
+		2E8AB9341D45EB79002E3F4A /* ShiuBarChartDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AB9331D45EB79002E3F4A /* ShiuBarChartDataSet.m */; };
+		2EE43A101D4748F100CF3A0F /* ShiuChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A0F1D4748F100CF3A0F /* ShiuChartView.m */; };
+		2EE43A1B1D49E06400CF3A0F /* ShiuCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A1A1D49E06400CF3A0F /* ShiuCircleView.m */; };
+		2EE43A1E1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A1D1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m */; };
+		2EE43A261D4ED8FC00CF3A0F /* ShiuChartScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A251D4ED8FC00CF3A0F /* ShiuChartScrollView.m */; };
+		2EE43A291D501F1000CF3A0F /* ShiuVerticalSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A281D501F1000CF3A0F /* ShiuVerticalSelectionView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2E8AB8631D3C880C002E3F4A /* ShiuTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShiuTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E8AB8671D3C880D002E3F4A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2E8AB8691D3C880D002E3F4A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2E8AB86A1D3C880D002E3F4A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2E8AB86C1D3C880D002E3F4A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		2E8AB86D1D3C880D002E3F4A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		2E8AB8701D3C880D002E3F4A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2E8AB8721D3C880D002E3F4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2E8AB8751D3C880D002E3F4A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2E8AB8771D3C880D002E3F4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E8AB8861D3DBBBF002E3F4A /* KAProgressLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAProgressLabel.h; sourceTree = "<group>"; };
+		2E8AB8871D3DBBBF002E3F4A /* KAProgressLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KAProgressLabel.m; sourceTree = "<group>"; };
+		2E8AB8881D3DBBBF002E3F4A /* TPPropertyAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPPropertyAnimation.h; sourceTree = "<group>"; };
+		2E8AB8891D3DBBBF002E3F4A /* TPPropertyAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPPropertyAnimation.m; sourceTree = "<group>"; };
+		2E8AB88C1D3DF772002E3F4A /* ShiuBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartView.h; sourceTree = "<group>"; };
+		2E8AB88D1D3DF772002E3F4A /* ShiuBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartView.m; sourceTree = "<group>"; };
+		2E8AB88F1D3DF784002E3F4A /* ShiuBarChartView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShiuBarChartView.xib; sourceTree = "<group>"; };
+		2E8AB9251D45E040002E3F4A /* ShiuBarChartViewV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartViewV2.h; sourceTree = "<group>"; };
+		2E8AB9261D45E040002E3F4A /* ShiuBarChartViewV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartViewV2.m; sourceTree = "<group>"; };
+		2E8AB9281D45E145002E3F4A /* ShiuLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuLegendView.h; sourceTree = "<group>"; };
+		2E8AB9291D45E145002E3F4A /* ShiuLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuLegendView.m; sourceTree = "<group>"; };
+		2E8AB92C1D45E186002E3F4A /* ShiuBarChartData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartData.h; sourceTree = "<group>"; };
+		2E8AB92D1D45E186002E3F4A /* ShiuBarChartData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartData.m; sourceTree = "<group>"; };
+		2E8AB92F1D45E291002E3F4A /* ShiuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBar.h; sourceTree = "<group>"; };
+		2E8AB9301D45E291002E3F4A /* ShiuBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBar.m; sourceTree = "<group>"; };
+		2E8AB9321D45EB79002E3F4A /* ShiuBarChartDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuBarChartDataSet.h; sourceTree = "<group>"; };
+		2E8AB9331D45EB79002E3F4A /* ShiuBarChartDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuBarChartDataSet.m; sourceTree = "<group>"; };
+		2EE43A0E1D4748F100CF3A0F /* ShiuChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuChartView.h; sourceTree = "<group>"; };
+		2EE43A0F1D4748F100CF3A0F /* ShiuChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuChartView.m; sourceTree = "<group>"; };
+		2EE43A191D49E06400CF3A0F /* ShiuCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuCircleView.h; sourceTree = "<group>"; };
+		2EE43A1A1D49E06400CF3A0F /* ShiuCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuCircleView.m; sourceTree = "<group>"; };
+		2EE43A1C1D4B0A0E00CF3A0F /* ShiuChartTooltipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuChartTooltipView.h; sourceTree = "<group>"; };
+		2EE43A1D1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuChartTooltipView.m; sourceTree = "<group>"; };
+		2EE43A241D4ED8FC00CF3A0F /* ShiuChartScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuChartScrollView.h; sourceTree = "<group>"; };
+		2EE43A251D4ED8FC00CF3A0F /* ShiuChartScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuChartScrollView.m; sourceTree = "<group>"; };
+		2EE43A271D501F1000CF3A0F /* ShiuVerticalSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShiuVerticalSelectionView.h; sourceTree = "<group>"; };
+		2EE43A281D501F1000CF3A0F /* ShiuVerticalSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShiuVerticalSelectionView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2E8AB8601D3C880C002E3F4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2E8AB85A1D3C880C002E3F4A = {
+			isa = PBXGroup;
+			children = (
+				2E8AB8651D3C880D002E3F4A /* ShiuTest */,
+				2E8AB8641D3C880C002E3F4A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2E8AB8641D3C880C002E3F4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E8AB8631D3C880C002E3F4A /* ShiuTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2E8AB8651D3C880D002E3F4A /* ShiuTest */ = {
+			isa = PBXGroup;
+			children = (
+				2E8AB8851D3DBBBF002E3F4A /* KAProgressLabel */,
+				2E8AB8691D3C880D002E3F4A /* AppDelegate.h */,
+				2E8AB86A1D3C880D002E3F4A /* AppDelegate.m */,
+				2E8AB86C1D3C880D002E3F4A /* ViewController.h */,
+				2E8AB86D1D3C880D002E3F4A /* ViewController.m */,
+				2E8AB86F1D3C880D002E3F4A /* Main.storyboard */,
+				2E8AB9171D45AFE9002E3F4A /* ShiuChartView */,
+				2E8AB91E1D45DF60002E3F4A /* ShiuBarChartView */,
+				2E8AB8911D3DF7AB002E3F4A /* ShiuBarChartView */,
+				2E8AB8721D3C880D002E3F4A /* Assets.xcassets */,
+				2E8AB8741D3C880D002E3F4A /* LaunchScreen.storyboard */,
+				2E8AB8771D3C880D002E3F4A /* Info.plist */,
+				2E8AB8661D3C880D002E3F4A /* Supporting Files */,
+			);
+			path = ShiuTest;
+			sourceTree = "<group>";
+		};
+		2E8AB8661D3C880D002E3F4A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2E8AB8671D3C880D002E3F4A /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2E8AB8851D3DBBBF002E3F4A /* KAProgressLabel */ = {
+			isa = PBXGroup;
+			children = (
+				2E8AB8861D3DBBBF002E3F4A /* KAProgressLabel.h */,
+				2E8AB8871D3DBBBF002E3F4A /* KAProgressLabel.m */,
+				2E8AB8881D3DBBBF002E3F4A /* TPPropertyAnimation.h */,
+				2E8AB8891D3DBBBF002E3F4A /* TPPropertyAnimation.m */,
+			);
+			path = KAProgressLabel;
+			sourceTree = "<group>";
+		};
+		2E8AB8911D3DF7AB002E3F4A /* ShiuBarChartView */ = {
+			isa = PBXGroup;
+			children = (
+				2E8AB88C1D3DF772002E3F4A /* ShiuBarChartView.h */,
+				2E8AB88D1D3DF772002E3F4A /* ShiuBarChartView.m */,
+				2E8AB88F1D3DF784002E3F4A /* ShiuBarChartView.xib */,
+			);
+			name = ShiuBarChartView;
+			sourceTree = "<group>";
+		};
+		2E8AB9171D45AFE9002E3F4A /* ShiuChartView */ = {
+			isa = PBXGroup;
+			children = (
+				2EE43A241D4ED8FC00CF3A0F /* ShiuChartScrollView.h */,
+				2EE43A251D4ED8FC00CF3A0F /* ShiuChartScrollView.m */,
+				2EE43A0E1D4748F100CF3A0F /* ShiuChartView.h */,
+				2EE43A0F1D4748F100CF3A0F /* ShiuChartView.m */,
+				2EE43A191D49E06400CF3A0F /* ShiuCircleView.h */,
+				2EE43A1A1D49E06400CF3A0F /* ShiuCircleView.m */,
+				2EE43A271D501F1000CF3A0F /* ShiuVerticalSelectionView.h */,
+				2EE43A281D501F1000CF3A0F /* ShiuVerticalSelectionView.m */,
+				2EE43A1C1D4B0A0E00CF3A0F /* ShiuChartTooltipView.h */,
+				2EE43A1D1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m */,
+			);
+			name = ShiuChartView;
+			sourceTree = "<group>";
+		};
+		2E8AB91E1D45DF60002E3F4A /* ShiuBarChartView */ = {
+			isa = PBXGroup;
+			children = (
+				2E8AB9251D45E040002E3F4A /* ShiuBarChartViewV2.h */,
+				2E8AB9261D45E040002E3F4A /* ShiuBarChartViewV2.m */,
+				2E8AB9321D45EB79002E3F4A /* ShiuBarChartDataSet.h */,
+				2E8AB9331D45EB79002E3F4A /* ShiuBarChartDataSet.m */,
+				2E8AB9281D45E145002E3F4A /* ShiuLegendView.h */,
+				2E8AB9291D45E145002E3F4A /* ShiuLegendView.m */,
+				2E8AB92C1D45E186002E3F4A /* ShiuBarChartData.h */,
+				2E8AB92D1D45E186002E3F4A /* ShiuBarChartData.m */,
+				2E8AB92F1D45E291002E3F4A /* ShiuBar.h */,
+				2E8AB9301D45E291002E3F4A /* ShiuBar.m */,
+			);
+			name = ShiuBarChartView;
+			path = ..;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2E8AB8621D3C880C002E3F4A /* ShiuTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E8AB87A1D3C880D002E3F4A /* Build configuration list for PBXNativeTarget "ShiuTest" */;
+			buildPhases = (
+				2E8AB85F1D3C880C002E3F4A /* Sources */,
+				2E8AB8601D3C880C002E3F4A /* Frameworks */,
+				2E8AB8611D3C880C002E3F4A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShiuTest;
+			productName = ShiuTest;
+			productReference = 2E8AB8631D3C880C002E3F4A /* ShiuTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2E8AB85B1D3C880C002E3F4A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = AllenShiu;
+				TargetAttributes = {
+					2E8AB8621D3C880C002E3F4A = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 2E8AB85E1D3C880C002E3F4A /* Build configuration list for PBXProject "ShiuTest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2E8AB85A1D3C880C002E3F4A;
+			productRefGroup = 2E8AB8641D3C880C002E3F4A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2E8AB8621D3C880C002E3F4A /* ShiuTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2E8AB8611D3C880C002E3F4A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E8AB8901D3DF784002E3F4A /* ShiuBarChartView.xib in Resources */,
+				2E8AB8761D3C880D002E3F4A /* LaunchScreen.storyboard in Resources */,
+				2E8AB8731D3C880D002E3F4A /* Assets.xcassets in Resources */,
+				2E8AB8711D3C880D002E3F4A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2E8AB85F1D3C880C002E3F4A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E8AB88E1D3DF772002E3F4A /* ShiuBarChartView.m in Sources */,
+				2EE43A261D4ED8FC00CF3A0F /* ShiuChartScrollView.m in Sources */,
+				2E8AB88B1D3DBBBF002E3F4A /* TPPropertyAnimation.m in Sources */,
+				2E8AB9311D45E291002E3F4A /* ShiuBar.m in Sources */,
+				2E8AB92A1D45E145002E3F4A /* ShiuLegendView.m in Sources */,
+				2EE43A101D4748F100CF3A0F /* ShiuChartView.m in Sources */,
+				2E8AB86E1D3C880D002E3F4A /* ViewController.m in Sources */,
+				2EE43A1E1D4B0A0E00CF3A0F /* ShiuChartTooltipView.m in Sources */,
+				2E8AB88A1D3DBBBF002E3F4A /* KAProgressLabel.m in Sources */,
+				2E8AB86B1D3C880D002E3F4A /* AppDelegate.m in Sources */,
+				2EE43A291D501F1000CF3A0F /* ShiuVerticalSelectionView.m in Sources */,
+				2EE43A1B1D49E06400CF3A0F /* ShiuCircleView.m in Sources */,
+				2E8AB9341D45EB79002E3F4A /* ShiuBarChartDataSet.m in Sources */,
+				2E8AB9271D45E040002E3F4A /* ShiuBarChartViewV2.m in Sources */,
+				2E8AB92E1D45E186002E3F4A /* ShiuBarChartData.m in Sources */,
+				2E8AB8681D3C880D002E3F4A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2E8AB86F1D3C880D002E3F4A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E8AB8701D3C880D002E3F4A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2E8AB8741D3C880D002E3F4A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E8AB8751D3C880D002E3F4A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2E8AB8781D3C880D002E3F4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		2E8AB8791D3C880D002E3F4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2E8AB87B1D3C880D002E3F4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = ShiuTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ufiSpace.ShiuTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2E8AB87C1D3C880D002E3F4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = ShiuTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ufiSpace.ShiuTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2E8AB85E1D3C880C002E3F4A /* Build configuration list for PBXProject "ShiuTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E8AB8781D3C880D002E3F4A /* Debug */,
+				2E8AB8791D3C880D002E3F4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E8AB87A1D3C880D002E3F4A /* Build configuration list for PBXNativeTarget "ShiuTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E8AB87B1D3C880D002E3F4A /* Debug */,
+				2E8AB87C1D3C880D002E3F4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2E8AB85B1D3C880C002E3F4A /* Project object */;
+}
