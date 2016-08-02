@@ -110,8 +110,8 @@
         }
     }
     else {
-        //
-        //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
+        NSLog(@"dwqdq");
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
     }
 }
 
@@ -143,6 +143,8 @@
     else {
         [self.timer invalidate];
         self.timer = nil;
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
+        [self performSelector:@selector(delayRequest) withObject:nil afterDelay:2.0f];
     }
 }
 
