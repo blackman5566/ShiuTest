@@ -100,28 +100,43 @@
     // 判斷是否靠近螢幕的右邊邊緣
     if (touchPoint.x > ([UIScreen mainScreen].bounds.size.width - (DashLineWidth + 10))) {
         if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateDisplacementAmount) userInfo:nil repeats:YES];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRightDisplacementAmount) userInfo:nil repeats:YES];
+        }
+    }
+    else if (touchPoint.x < (DashLineWidth + 10)) {
+        // 計算是否為左邊 兩秒就跟後端要新資料
+        if (!self.timer) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateLeftDisplacementAmount) userInfo:nil repeats:YES];
         }
     }
     else {
-        [self.timer invalidate];
-        self.timer = nil;
+
+        //[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
     }
 }
 
-- (void)updateDisplacementAmount {
+- (void)updateRightDisplacementAmount {
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
-    if (roundf(distanceFromRight) == width) {
+    if (distanceFromRight == width) {
         [self.timer invalidate];
         self.timer = nil;
     }
-    else {
+    else if ((distanceFromRight - width) >= DashLineWidth) {
         self.displacementAmount += DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
-        [self.scrollView setContentOffset:position animated:NO];
+        [self.scrollView setContentOffset:position animated:YES];
     }
+}
+
+- (void)updateLeftDisplacementAmount {
+    CGFloat contentYoffset = self.scrollView.contentOffset.x;
+    NSLog(@"updateLeftDisplacementAmount = %f", contentYoffset);
+}
+
+- (void)delayRequest {
+    NSLog(@"delayRequest");
 }
 
 - (void)setVerticalSelectionViewVisible:(BOOL)verticalSelectionViewVisible animated:(BOOL)animated {
