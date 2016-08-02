@@ -12,6 +12,9 @@
 
 @interface ShiuChartView : UIView
 
+/**
+ @abstract 產生新的 CharView 。
+ */
 + (instancetype)initCharView:(CGRect)frame;
 
 /**
@@ -33,5 +36,10 @@
  @abstract 設定 折線圖的顏色
  */
 @property (strong, nonatomic) UIColor *chartColor;
+
+/**
+ @abstract 設定 折線圖的顏色
+ */
+@property (strong, nonatomic) NSMutableArray *circleViewArray;
 
 @end

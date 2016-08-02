@@ -44,7 +44,7 @@ typedef void (^CircleClickBlock)(id);
 /**
    @abstract 記錄 value 。
  */
-@property (nonatomic, assign) CGFloat value;
+@property (nonatomic, assign) NSString *value;
 
 @end
 
