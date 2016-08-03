@@ -10,53 +10,55 @@
 
 @interface ShiuChartTooltipView ()
 
-@property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UILabel *infoLabel;
 
 @end
 
 @implementation ShiuChartTooltipView
 
-#pragma mark - Alloc/Init
+#pragma mark - init
 
-- (id)init
-{
-    self = [super initWithFrame:CGRectMake(0, 0, 60, 20)];
-    if (self)
-    {
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    
+    if (self) {
         self.backgroundColor = [UIColor redColor];
-        _textLabel = [[UILabel alloc] init];
-        _textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14];
-        _textLabel.backgroundColor = [UIColor clearColor];
-        _textLabel.textColor =[UIColor whiteColor];
-        _textLabel.adjustsFontSizeToFitWidth = YES;
-        _textLabel.numberOfLines = 1;
-        _textLabel.textAlignment = NSTextAlignmentCenter;
-        _textLabel.text = @"23次/80ml";
-        [self addSubview:_textLabel];
+        [self setupInfoLabel];
     }
     return self;
 }
 
-#pragma mark - Setters
+#pragma mark * setup
 
-- (void)setText:(NSString *)text
-{
-    self.textLabel.text =text;
+- (void)setupInfoLabel {
+    self.infoLabel = [[UILabel alloc] init];
+    self.infoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14];
+    self.infoLabel.backgroundColor = [UIColor clearColor];
+    self.infoLabel.textColor = [UIColor whiteColor];
+    self.infoLabel.adjustsFontSizeToFitWidth = YES;
+    self.infoLabel.numberOfLines = 1;
+    self.infoLabel.textAlignment = NSTextAlignmentCenter;
+    self.infoLabel.text = @"23次/80ml";
+    [self addSubview:self.infoLabel];
+}
+
+#pragma mark - Setter
+
+- (void)setText:(NSString *)text {
+    self.infoLabel.text = text;
     [self setNeedsLayout];
 }
 
-- (void)setTooltipColor:(UIColor *)tooltipColor
-{
+- (void)setTooltipColor:(UIColor *)tooltipColor {
     self.backgroundColor = tooltipColor;
     [self setNeedsDisplay];
 }
 
-#pragma mark - Layout
+#pragma mark - layoutSubviews
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    _textLabel.frame = self.bounds;
+    self.infoLabel.frame = self.bounds;
 }
 
 @end

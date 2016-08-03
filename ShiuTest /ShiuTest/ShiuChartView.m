@@ -176,7 +176,6 @@ typedef enum {
 #pragma mark - 畫曲線圖
 
 - (void)drawLineChart {
-    
     NSMutableArray *pointNormalizationArrays = [self pointsNormalization];
     // 開始將折線圖畫出來 初始化 貝茲曲線
     UIBezierPath *lineChartPath = [UIBezierPath bezierPath];
