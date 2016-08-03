@@ -61,24 +61,29 @@
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     [self setTooltipVisible:YES animated:YES atTouchPoint:touchPoint];
-    CGFloat xOffset = fmin(self.frame.size.width - self.verticalSelectionView.frame.size.width, fmax(0, touchPoint.x - (self.verticalSelectionView.frame.size.width * 0.5)));
-    self.verticalSelectionView.frame = CGRectMake(xOffset, 0, self.verticalSelectionView.frame.size.width, self.verticalSelectionView.frame.size.height);
+    
+    CGFloat xOffset1 = CGRectGetWidth(self.frame) - CGRectGetWidth(self.verticalSelectionView.frame);
+    CGFloat xOffset2 = fmax(0, touchPoint.x - (CGRectGetWidth(self.verticalSelectionView.frame) * 0.5));
+    CGFloat xOffset = fmin(xOffset1, xOffset2);
+    CGFloat width = CGRectGetWidth(self.verticalSelectionView.frame);
+    CGFloat height = CGRectGetHeight(self.verticalSelectionView.frame);
+    self.verticalSelectionView.frame = CGRectMake(xOffset, 0, width, height);
+    
     [self showLabelSetText];
 }
 
 - (void)changeScrollViewDisplacementAmount:(NSSet *)touches {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-    // 判斷是否靠近螢幕的右邊邊緣
-    if (touchPoint.x > ([UIScreen mainScreen].bounds.size.width - (DashLineWidth + 10))) {
+    
+    BOOL isMoveToRight = (touchPoint.x > (CGRectGetWidth([UIScreen mainScreen].bounds) - (DashLineWidth + 10)));
+    BOOL isMoveToLeft = (touchPoint.x < (DashLineWidth + 10));
+    if (isMoveToRight || isMoveToLeft) {
         if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRightDisplacementAmount) userInfo:nil repeats:YES];
-        }
-    }
-    else if (touchPoint.x < (DashLineWidth + 10)) {
-        // 計算是否為左邊 兩秒就跟後端要新資料
-        if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateLeftDisplacementAmount) userInfo:nil repeats:YES];
+            SEL updateRight = @selector(updateRightDisplacementAmount);
+            SEL updateLeft = @selector(updateLeftDisplacementAmount);
+            SEL updateDisplacementAmount = isMoveToRight ? updateRight : updateLeft;
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:updateDisplacementAmount userInfo:nil repeats:YES];
         }
     }
     else {
@@ -96,8 +101,8 @@
 #pragma mark * init
 
 - (void)setupInitValue:(CGRect)frame {
-    [self.xValue removeAllObjects];
-    [self.yValue removeAllObjects];
+    self.xValue = [[NSMutableArray alloc] init];
+    self.yValue = [[NSMutableArray alloc] init];
     
     [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
     for (int i = 1; i < 20; i++) {
@@ -123,24 +128,21 @@
     [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
     [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
     
-    CGRect graphViewFrame = frame;
-    graphViewFrame.origin.x = 0;
-    graphViewFrame.origin.y = 0;
-    graphViewFrame.size.height = frame.size.height - 50;
-    self.scrollView = [[UIScrollView alloc] initWithFrame:graphViewFrame];
-    self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.scrollEnabled = NO;
-    CGFloat width = MAX([UIScreen mainScreen].bounds.size.width, (self.xValue.count * DashLineWidth));
-    graphViewFrame.size.width = width;
-    
-    self.chartView = [[ShiuChartView alloc] initWithFrame:graphViewFrame];
+    CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
+    CGFloat height = CGRectGetHeight(frame) - 50;
+    self.chartView = [[ShiuChartView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
     self.chartView.chartColor = [UIColor blueColor];
-    self.scrollView.contentSize = CGSizeMake(self.chartView.frame.size.width, graphViewFrame.size.height);
+    
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.scrollEnabled = NO;
+    self.scrollView.contentSize = CGSizeMake(width, height);
     [self.scrollView addSubview:self.chartView];
     [self addSubview:self.scrollView];
     [self sendSubviewToBack:self.scrollView];
+    
     self.displacementAmount = 0;
 }
 
@@ -148,14 +150,11 @@
 
 - (void)addVerticalSelectionView {
     // 初始化紅色線
-    self.verticalSelectionView = [[ShiuVerticalSelectionView alloc] initWithFrame:CGRectMake(50, 0, 1, self.frame.size.height)];
-    self.verticalSelectionView.alpha = 1.0;
-    self.verticalSelectionView.hidden = NO;
+    self.verticalSelectionView = [[ShiuVerticalSelectionView alloc] initWithFrame:CGRectMake(50, 0, 1, CGRectGetHeight(self.frame))];
     [self addSubview:self.verticalSelectionView];
     
     // 初始化資訊 view
     self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(50, 0, 60, 20)];
-    self.tooltipView.alpha = 1.0;
     [self addSubview:self.tooltipView];
 }
 
@@ -163,10 +162,11 @@
     // 開始向右滑動
     // 當 distanceFromRight 等於 width 就代表說已經到底了，
     // 使用 roundf 是因為不同尺寸下會有些許誤差值，所以用無條件捨棄方式比對。
-    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds);
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
-    if (roundf(distanceFromRight) == width) {
+    BOOL isMoveRightMaxLimit = (roundf(distanceFromRight) == width);
+    if (isMoveRightMaxLimit) {
         [self cancelAllTask];
     }
     else {
@@ -181,15 +181,16 @@
     // 開始向左滑動
     // contentYoffset 當為 0 時就代表已經到最前面了，當不是為0時就繼續滑動
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
-    if (contentYoffset) {
+    BOOL isMoveLeftMaxLimit = (contentYoffset == 0);
+    if (isMoveLeftMaxLimit) {
+        [self cancelAllTask];
+        [self performSelector:@selector(delayRequest) withObject:nil afterDelay:2.0f];
+    }
+    else {
         self.displacementAmount -= DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
         [self.scrollView setContentOffset:position animated:NO];
         [self showLabelSetText];
-    }
-    else {
-        [self cancelAllTask];
-        [self performSelector:@selector(delayRequest) withObject:nil afterDelay:2.0f];
     }
 }
 
@@ -207,31 +208,32 @@
     [self bringSubviewToFront:self.tooltipView];
     
     // 更新資訊view的位置
+    __weak typeof(self) weakSelf = self;
     void (^updatePosition)() = ^{
         CGPoint convertedTouchPoint = touchPoint;
-        CGFloat minChartX = (self.frame.origin.x + ceil(self.tooltipView.frame.size.width * 0.5));
+        CGFloat minChartX = (CGRectGetMinX(weakSelf.frame) + ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
         if (convertedTouchPoint.x < minChartX) {
             convertedTouchPoint.x = minChartX;
         }
-        CGFloat maxChartX = (self.frame.origin.x + self.frame.size.width - ceil(self.tooltipView.frame.size.width * 0.5));
+        
+        CGFloat maxChartX = (CGRectGetMinY(weakSelf.frame) + CGRectGetWidth(weakSelf.frame) - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
         if (convertedTouchPoint.x > maxChartX) {
             convertedTouchPoint.x = maxChartX;
         }
-        self.tooltipView.frame = CGRectMake(convertedTouchPoint.x - ceil(self.tooltipView.frame.size.width * 0.5), 10, self.tooltipView.frame.size.width, self.tooltipView.frame.size.height);
-    };
-    
-    // 更新 tooltipView alpha
-    void (^isVisible)() = ^{
-        self.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
+        
+        CGFloat x = convertedTouchPoint.x - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5);
+        CGFloat y = 10;
+        CGFloat width = CGRectGetWidth(weakSelf.tooltipView.frame);
+        CGFloat height = CGRectGetHeight(weakSelf.tooltipView.frame);
+        weakSelf.tooltipView.frame = CGRectMake(x, y, width, height);
     };
     
     if (animated) {
         if (tooltipVisible) {
             updatePosition();
         }
-        
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-            isVisible();
+            weakSelf.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
         } completion: ^(BOOL finished) {
             if (!tooltipVisible) {
                 updatePosition();
@@ -240,7 +242,7 @@
     }
     else {
         updatePosition();
-        isVisible();
+        self.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
     }
 }
 
@@ -273,8 +275,6 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.xValue = [[NSMutableArray alloc] init];
-        self.yValue = [[NSMutableArray alloc] init];
         [self setupInitValue:frame];
     }
     return self;
