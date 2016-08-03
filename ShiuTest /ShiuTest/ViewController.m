@@ -51,14 +51,7 @@
     // 第一版
     //[self setupShiuBarChartView];
     // 第二版
-    //[self setupShiuBarChartViewV2];
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.backgroundColor = [UIColor redColor];
-    btn.frame = CGRectMake(0,400,200,50); // x,y自行設定
-    btn.layer.borderColor = [UIColor blackColor].CGColor; //設定邊線顏色
-    btn.layer.masksToBounds = YES;  //這行要有才能顯示出來
-    btn.layer.cornerRadius =30.0f; //邊角15.0f，自行設定邊角圓弧度
-    [self.view addSubview:btn];
+    [self setupShiuBarChartViewV2];
     // 折線圖
     [self setupShiuChartView];
 }
@@ -66,7 +59,7 @@
 -(void)setupShiuChartView{
     // 使用方法
     
-    ShiuChartScrollView *shiuChartScrollView = [[ShiuChartScrollView alloc] initWithFrame:CGRectMake(0, 60, [UIScreen mainScreen].bounds.size.width, 250)];
+    ShiuChartScrollView *shiuChartScrollView = [[ShiuChartScrollView alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.shiuBarChartViewV2.frame) , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height-CGRectGetHeight(self.shiuBarChartViewV2.frame))];
     shiuChartScrollView.backgroundColor = [UIColor redColor];
     [self.view addSubview:shiuChartScrollView];
 
@@ -78,7 +71,7 @@
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals3 = [[NSMutableArray alloc] init];
     double mult = 5 * 1000.f;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         double val = (double)(arc4random_uniform(mult) + 3.0);
         [yVals1 addObject:@(val)];
         val = (double)(arc4random_uniform(mult) + 3.0);
@@ -100,13 +93,13 @@
     // 設定每一個 Bar 的資料
     ShiuBarChartData *data = [[ShiuBarChartData alloc] initWithDataSets:dataSets];
     // 設定 x 軸要顯示的文字
-    data.xLabels = @[@"貓貓一號", @"貓貓二號"];
+    data.xLabels = @[@"貓貓一號", @"貓貓二號",@"貓貓三號"];
     // 設定群組內每一個bar之間的 Gap
     data.itemGap = 0;
     data.groupSpace = 40;
 
     // 初始化 shiuBarChartViewV2
-    self.shiuBarChartViewV2 = [[ShiuBarChartViewV2 alloc] initWithFrame:CGRectMake(0, 10, [UIScreen mainScreen].bounds.size.width, 200)];
+    self.shiuBarChartViewV2 = [[ShiuBarChartViewV2 alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 200)];
     // 設定 Bar View 與四個邊界的距離
     self.shiuBarChartViewV2.chartMargin = UIEdgeInsetsMake(45, 15, 40, 15);
     // 設定 資料

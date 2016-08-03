@@ -13,11 +13,6 @@
 @interface ShiuChartView : UIView
 
 /**
- @abstract 產生新的 CharView 。
- */
-+ (instancetype)initCharView:(CGRect)frame;
-
-/**
  @abstract 設定 xValues 的資料。
  */
 @property (strong, nonatomic) NSArray *xValues;

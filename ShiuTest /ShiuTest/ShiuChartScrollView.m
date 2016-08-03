@@ -14,16 +14,17 @@
 @interface ShiuChartScrollView ()
 
 @property (strong, nonatomic) ShiuVerticalSelectionView *verticalSelectionView;
-@property (nonatomic, assign) BOOL verticalSelectionViewVisible;
+
 @property (nonatomic, strong) ShiuChartTooltipView *tooltipView;
-@property (nonatomic, assign) BOOL tooltipVisible;
+@property (nonatomic, strong) ShiuChartView *chartView;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, assign) CGFloat displacementAmount;
-@property (nonatomic, strong) ShiuChartView *chartView;
-
 @property (nonatomic, strong) NSMutableArray *xValue;
 @property (nonatomic, strong) NSMutableArray *yValue;
+
+@property (nonatomic, assign) CGFloat displacementAmount;
+@property (nonatomic, assign) BOOL tooltipVisible;
+@property (nonatomic, assign) BOOL verticalSelectionViewVisible;
 
 @end
 
@@ -35,30 +36,30 @@
     if (self = [super initWithFrame:frame]) {
         self.xValue = [[NSMutableArray alloc] init];
         self.yValue = [[NSMutableArray alloc] init];
-        double mult = 5 * 10.f;
-        for (int i = 1; i < 100; i++) {
-            NSInteger val = (double)(arc4random_uniform(mult) + 3.0);
-            [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-            val = (NSInteger)(arc4random_uniform(mult) + 3.0);
-            [self.yValue addObject:[NSString stringWithFormat:@"%d", i]];
-        }
         [self setupInitValue:frame];
     }
     return self;
 }
 
 - (void)setupInitValue:(CGRect)frame {
+    [self.xValue removeAllObjects];
+    [self.yValue removeAllObjects];
+    for (int i = 1; i < 100; i++) {
+        [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
+        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
+    }
+
     CGRect graphViewFrame = frame;
     graphViewFrame.origin.x = 0;
     graphViewFrame.origin.y = 0;
-    graphViewFrame.size.height = frame.size.height - 20;
+    graphViewFrame.size.height = frame.size.height - 50;
     self.scrollView = [[UIScrollView alloc] initWithFrame:graphViewFrame];
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.scrollEnabled = NO;
     CGFloat width = MAX([UIScreen mainScreen].bounds.size.width, (self.xValue.count * DashLineWidth));
     graphViewFrame.size.width = width;
 
-    self.chartView = [ShiuChartView initCharView:graphViewFrame];
+    self.chartView = [[ShiuChartView alloc] initWithFrame:graphViewFrame];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
     self.chartView.chartColor = [UIColor blueColor];
@@ -137,6 +138,7 @@
         self.timer = nil;
     }
     else {
+        [self showLabelSetText];
         self.displacementAmount += DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
         [self.scrollView setContentOffset:position animated:NO];
@@ -151,6 +153,7 @@
         self.displacementAmount -= DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
         [self.scrollView setContentOffset:position animated:NO];
+        [self showLabelSetText];
     }
     else {
         [self.timer invalidate];
@@ -252,7 +255,8 @@
     // 檢查線跟按鈕是否有重疊（CGRectIntersectsRect），如果是就顯示
     for (int i = 0; i < self.chartView.circleViewArray.count; i++) {
         ShiuCircleView *circleView = self.chartView.circleViewArray[i];
-        if (CGRectIntersectsRect(circleView.frame, self.verticalSelectionView.frame)) {
+        CGRect newRect = [self convertRect:circleView.frame fromView:self.scrollView];
+        if (CGRectIntersectsRect(newRect, self.verticalSelectionView.frame)) {
             [self.tooltipView setText:circleView.value];
         }
     }
