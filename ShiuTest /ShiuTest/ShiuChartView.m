@@ -43,7 +43,7 @@ typedef enum {
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self setupInitValues];
-        
+
         // 設定距離左邊界的距離
         self.leftLineMargin = 0;
     }
@@ -55,7 +55,7 @@ typedef enum {
     self.xPoints = [NSMutableArray array];
     self.yPoints = [NSMutableArray array];
     self.circleViewArray = [NSMutableArray array];
-    
+
     // 設定顯示文字大小與相關參數設定
     UIFont *font = [UIFont systemFontOfSize:14];
     UIColor *stringColor = [UIColor blackColor];
@@ -76,13 +76,13 @@ typedef enum {
 - (void)setupChartView {
     // 將 x 軸上的值畫出來
     [self setupXaxisWithValues:self.xValues];
-    
+
     // 將 y 軸上最大的值取出來，之後要正規劃，讓點不超出範圍。
     [self setupYaxisWithValues:self.yValues];
-    
+
     // 將背景畫出來
     [self drawDashLine];
-    
+
     // 將可愛的線畫出來嚕
     [self drawLineChart];
 }
@@ -107,14 +107,14 @@ typedef enum {
         CGFloat fristGap = DashLineWidth / 2;
         CGFloat widthGap = (DashLineWidth * index) + self.leftLineMargin;
         calculateXPoint = fristGap + widthGap;
-        
+
         CGFloat calculateYPoint = self.frame.size.height - BottomLineMargin;
         NSString *xValue = xValues[index];
         CGSize size = [xValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
         NSInteger displacementAmount = 0;
         displacementAmount = (index % 2) ? DisplacementAmountDown : DisplacementAmountUp;
         [xValue drawAtPoint:CGPointMake(calculateXPoint - size.width * 0.5, calculateYPoint + displacementAmount) withAttributes:self.textStyleDictionary];
-        
+
         // 最後將 xPoint 存起來
         // calculateXPoint: 計算後的 X 位置
         // self.frame.size.height: 當畫背景時需要 Y 的參數，所以直接取當前畫面的高直接畫到滿。
@@ -151,13 +151,13 @@ typedef enum {
 
 - (void)drawDashLine {
     if (self.xPoints) {
-        
+
         // 背景顏色初始化設定寬度透明度
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         CGContextSetLineWidth(ctx, DashLineWidth);
         CGContextSetLineCap(ctx, kCGLineCapSquare);
         CGContextSetAlpha(ctx, 0.6);
-        
+
         // index 將相對的背景顏色畫出來
         CGPoint minYPoint = [[self.yPoints firstObject] CGPointValue];
         NSMutableArray *localXpoints = [self.xPoints mutableCopy];
@@ -177,7 +177,7 @@ typedef enum {
 #pragma mark - 畫曲線圖
 
 - (void)drawLineChart {
-    
+
     NSMutableArray *pointNormalizationArrays = [self pointsNormalization];
     // 開始將折線圖畫出來 初始化 貝茲曲線
     UIBezierPath *lineChartPath = [UIBezierPath bezierPath];
@@ -192,11 +192,11 @@ typedef enum {
         [lineChartPath moveToPoint:[pointValue CGPointValue]];
         [lineChartPath stroke];
     }
-    
+
     // 畫出每一個點，但是這裡用 Button 較彈性。
     [self addCircularButton:pointNormalizationArrays];
-    
-    // 初始化 CAShapeLayer ，用來跑動畫效果
+
+    // 初始化 CAShapeLayer 將線畫出來
     CAShapeLayer *lineLayer = [self setUpLineLayer];
     lineLayer.path = lineChartPath.CGPath;
     lineLayer.strokeEnd = 1.0;
@@ -204,10 +204,10 @@ typedef enum {
 }
 
 - (NSMutableArray *)pointsNormalization {
+    // 將 X Y 軸的資料做最後的整理
+    // 正規化 Y 軸，讓每一點根據目前所設定的畫面大小畫出相對的點，才不會跑出範圍外。
     NSMutableArray *finishPoints = [NSMutableArray array];
     for (int i = 0; i < self.pointCount; i++) {
-        // 將 X Y 軸的資料做最後的整理
-        // Y 軸根據目前 所設定的畫面大小，去計算每一點出來的位置。
         CGFloat funcXPoint = [self.xPoints[i] CGPointValue].x;
         CGFloat yValue = [self.yValues[i] floatValue];
         CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue + 100)) * (YCoordinateHeight);
@@ -220,37 +220,10 @@ typedef enum {
     CAShapeLayer *lineLayer = [CAShapeLayer layer];
     lineLayer.lineCap = kCALineCapRound;
     lineLayer.lineJoin = kCALineJoinBevel;
-    lineLayer.strokeEnd   = 0.0;
-    
-    if (self.chartColor) {
-        lineLayer.strokeColor = self.chartColor.CGColor;
-    }
-    else {
-        lineLayer.strokeColor = RandomColor.CGColor;
-    }
-    if (self.chartWidth) {
-        lineLayer.lineWidth   = self.chartWidth;
-    }
-    else {
-        lineLayer.lineWidth   = 3.0;
-    }
+    lineLayer.strokeEnd = 0.0;
+    lineLayer.strokeColor = self.chartColor ? self.chartColor.CGColor : RandomColor.CGColor;
+    lineLayer.lineWidth = self.chartWidth ? self.chartWidth : 3.0f;
     return lineLayer;
-}
-
-#pragma mark - mise
-
-- (void)drawPathWithLine:(UIBezierPath *)line movePoint:(CGPoint)movePoint toPoint:(CGPoint)toPoint {
-    [line moveToPoint:movePoint];
-    [[UIColor redColor] setFill];
-    [line addLineToPoint:toPoint];
-    [line stroke];
-}
-
-- (UIBezierPath *)drawCircleWithOvalInRect:(CGRect)frame {
-    UIBezierPath *circleDot = [UIBezierPath bezierPathWithOvalInRect:frame];
-    [[UIColor blueColor] setFill];
-    [circleDot fill];
-    return circleDot;
 }
 
 - (void)addCircularButton:(NSArray *)finishPoints {
