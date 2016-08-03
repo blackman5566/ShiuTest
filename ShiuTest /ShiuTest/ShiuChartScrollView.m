@@ -70,40 +70,49 @@
     [self sendSubviewToBack:self.scrollView];
     self.displacementAmount = 0;
 }
+
+#pragma mark - drawRect 系統會自動調用這個方法
+
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     [self addVerticalSelectionView];
 }
 
 - (void)addVerticalSelectionView {
+    // 初始化紅色線
     self.verticalSelectionView = [[ShiuVerticalSelectionView alloc] initWithFrame:CGRectMake(50, 0, 1, self.frame.size.height)];
     self.verticalSelectionView.alpha = 0.0;
     self.verticalSelectionView.hidden = NO;
     [self addSubview:self.verticalSelectionView];
 
+    // 初始化資訊 view
     self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(0, 0, 60, 20)];
     self.tooltipView.alpha = 0.0;
     [self addSubview:self.tooltipView];
 }
 
-#pragma mark - Responder
+#pragma mark - Responder 處理觸碰事件
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 手指開始觸碰螢幕
     [self setVerticalSelectionViewVisible:NO animated:NO];
     [self touchesBeganOrMovedWithTouches:touches];
     [self changeScrollViewDisplacementAmount:touches];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 手指移動
     [self touchesBeganOrMovedWithTouches:touches];
     [self changeScrollViewDisplacementAmount:touches];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 手指離開螢幕
     [self touchesEndedOrCancelledWithTouches:touches];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 當有突發事件發生時 (比如觸碰過程被來電打斷)
     [self touchesEndedOrCancelledWithTouches:touches];
 }
 
@@ -123,33 +132,32 @@
         }
     }
     else {
-        [self.timer invalidate];
-        self.timer = nil;
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
+        [self cancelAllTask];
     }
 }
 
 - (void)updateRightDisplacementAmount {
     // 開始向右滑動
+    // 當 distanceFromRight 等於 width 就代表說已經到底了，
+    // 使用 roundf 是因為不同尺寸下會有些許誤差值，所以用無條件捨棄方式比對。
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
     if (roundf(distanceFromRight) == width) {
-        [self.timer invalidate];
-        self.timer = nil;
+        [self cancelAllTask];
     }
     else {
-        [self showLabelSetText];
         self.displacementAmount += DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
         [self.scrollView setContentOffset:position animated:NO];
+        [self showLabelSetText];
     }
 }
 
 - (void)updateLeftDisplacementAmount {
     // 開始向左滑動
+    // contentYoffset 當為 0 時就代表已經到最前面了，當不是為0時就繼續滑動
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
-    // 判斷為一輛是否為0 當為0時就代表已經到頂了，當不是為0時就繼續滑動
     if (contentYoffset) {
         self.displacementAmount -= DashLineWidth;
         CGPoint position = CGPointMake(self.displacementAmount, 0);
@@ -157,9 +165,7 @@
         [self showLabelSetText];
     }
     else {
-        [self.timer invalidate];
-        self.timer = nil;
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
+        [self cancelAllTask];
         [self performSelector:@selector(delayRequest) withObject:nil afterDelay:2.0f];
     }
 }
@@ -241,7 +247,6 @@
         updatePosition();
         isVisibility();
     }
-
 }
 
 - (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated {
@@ -261,6 +266,12 @@
             [self.tooltipView setText:circleView.value];
         }
     }
+}
+
+- (void)cancelAllTask {
+    [self.timer invalidate];
+    self.timer = nil;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
 }
 
 @end
