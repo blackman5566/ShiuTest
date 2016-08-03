@@ -45,6 +45,7 @@
 #pragma mark - Setter
 
 - (void)setText:(NSString *)text {
+    self.hidden = !text.floatValue;
     self.infoLabel.text = text;
     [self setNeedsLayout];
 }

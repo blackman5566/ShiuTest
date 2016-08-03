@@ -185,10 +185,12 @@ typedef enum {
     lineChartPath.lineWidth = 3.0;
     [[UIColor clearColor] set];
     for (int i = 1; i < pointNormalizationArrays.count; i++) {
-        NSValue *pointValue = pointNormalizationArrays[i][@"points"];
-        [lineChartPath addLineToPoint:[pointValue CGPointValue]];
-        [lineChartPath moveToPoint:[pointValue CGPointValue]];
-        [lineChartPath stroke];
+        if ([pointNormalizationArrays[i][@"value"] floatValue]) {
+            NSValue *pointValue = pointNormalizationArrays[i][@"points"];
+            [lineChartPath addLineToPoint:[pointValue CGPointValue]];
+            [lineChartPath moveToPoint:[pointValue CGPointValue]];
+            [lineChartPath stroke];
+        }
     }
 
     // 畫出每一個點，但是這裡用 Button 較彈性。
@@ -208,12 +210,9 @@ typedef enum {
     for (int i = 0; i < self.pointCount; i++) {
         CGFloat funcXPoint = [self.xPoints[i] CGPointValue].x;
         CGFloat yValue = [self.yValues[i] floatValue];
-        // 假設值等於 0 就不要畫點
-        if (yValue) {
-            CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue + 100)) * (YCoordinateHeight);
-            NSDictionary *pointsDictionary = @{ @"points": [NSValue valueWithCGPoint:CGPointMake(funcXPoint, funcYPoint)], @"value":self.yValues[i] };
-            [finishPoints addObject:pointsDictionary];
-        }
+        CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue + 100)) * (YCoordinateHeight);
+        NSDictionary *pointsDictionary = @{ @"points": [NSValue valueWithCGPoint:CGPointMake(funcXPoint, funcYPoint)], @"value":self.yValues[i] };
+        [finishPoints addObject:pointsDictionary];
     }
     return finishPoints;
 }
@@ -239,6 +238,7 @@ typedef enum {
         circle.borderWidth = 1;
         circle.holeColor = [UIColor grayColor];
         circle.isAnimationEnabled = NO;
+        circle.alpha = [finishPoints[i][@"value"] floatValue];
         //__weak ShiuChartView *weakSelf = self;
         //circle.circleClickBlock = ^(ShiuCircleView *circleView){
         //            // __strong CBChartView *strongSelf = weakSelf;
