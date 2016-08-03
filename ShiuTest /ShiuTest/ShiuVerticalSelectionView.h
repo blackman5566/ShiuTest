@@ -10,6 +10,4 @@
 
 @interface ShiuVerticalSelectionView : UIView
 
-@property (nonatomic, strong) UIColor *bgColor;
-
 @end

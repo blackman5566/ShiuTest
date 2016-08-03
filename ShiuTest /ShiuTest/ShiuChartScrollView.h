@@ -7,10 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ShiuChartView.h"
 
 @interface ShiuChartScrollView : UIView
-
-@property(nonatomic, strong) ShiuChartView *shiuChartView;
 
 @end

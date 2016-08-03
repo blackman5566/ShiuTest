@@ -106,7 +106,9 @@
 }
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-    self.circleClickBlock(self);
+    if (self.circleClickBlock) {
+        self.circleClickBlock(self);
+    }
     return YES;
 }
 

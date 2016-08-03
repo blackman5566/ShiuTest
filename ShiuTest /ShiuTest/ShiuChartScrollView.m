@@ -10,6 +10,7 @@
 #import "ShiuChartTooltipView.h"
 #import "ShiuVerticalSelectionView.h"
 #import "ShiuCircleView.h"
+#import "ShiuChartView.h"
 
 @interface ShiuChartScrollView ()
 
@@ -48,7 +49,7 @@
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
         [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
     }
-
+    
     CGRect graphViewFrame = frame;
     graphViewFrame.origin.x = 0;
     graphViewFrame.origin.y = 0;
@@ -58,7 +59,7 @@
     self.scrollView.scrollEnabled = NO;
     CGFloat width = MAX([UIScreen mainScreen].bounds.size.width, (self.xValue.count * DashLineWidth));
     graphViewFrame.size.width = width;
-
+    
     self.chartView = [[ShiuChartView alloc] initWithFrame:graphViewFrame];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
@@ -79,7 +80,7 @@
     self.verticalSelectionView.alpha = 0.0;
     self.verticalSelectionView.hidden = NO;
     [self addSubview:self.verticalSelectionView];
-
+    
     self.tooltipView = [[ShiuChartTooltipView alloc] init];
     self.tooltipView.alpha = 0.0;
     [self addSubview:self.tooltipView];
@@ -170,11 +171,11 @@
 
 - (void)setVerticalSelectionViewVisible:(BOOL)verticalSelectionViewVisible animated:(BOOL)animated {
     _verticalSelectionViewVisible = verticalSelectionViewVisible;
-
+    
     if (animated) {
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-             self.verticalSelectionView.alpha = self.verticalSelectionViewVisible ? 1.0 : 0.0;
-         } completion:nil];
+            self.verticalSelectionView.alpha = self.verticalSelectionViewVisible ? 1.0 : 0.0;
+        } completion:nil];
     }
     else {
         self.verticalSelectionView.alpha = _verticalSelectionViewVisible ? 1.0 : 0.0;
@@ -199,12 +200,12 @@
 
 - (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated atTouchPoint:(CGPoint)touchPoint {
     _tooltipVisible = tooltipVisible;
-
+    
     // 將資訊 view 新增進來
     [self addSubview:self.tooltipView];
     // 將兩個 view 都放到畫面最上面
     [self bringSubviewToFront:self.tooltipView];
-
+    
     // 更新資訊view的位置
     dispatch_block_t updatePosition = ^{
         CGPoint convertedTouchPoint = touchPoint;
@@ -218,29 +219,29 @@
         }
         self.tooltipView.frame = CGRectMake(convertedTouchPoint.x - ceil(self.tooltipView.frame.size.width * 0.5), 10, self.tooltipView.frame.size.width, self.tooltipView.frame.size.height);
     };
-
+    
     dispatch_block_t isVisibility = ^{
         self.tooltipView.alpha = _tooltipVisible ? 1.0 : 0.0;
     };
-
+    
     if (animated) {
         if (tooltipVisible) {
             updatePosition();
         }
-
+        
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-             isVisibility();
-         } completion: ^(BOOL finished) {
-             if (!tooltipVisible) {
-                 updatePosition();
-             }
-         }];
+            isVisibility();
+        } completion: ^(BOOL finished) {
+            if (!tooltipVisible) {
+                updatePosition();
+            }
+        }];
     }
     else {
         updatePosition();
         isVisibility();
     }
-
+    
 }
 
 - (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated {
