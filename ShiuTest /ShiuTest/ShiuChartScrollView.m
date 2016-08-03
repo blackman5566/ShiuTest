@@ -31,16 +31,69 @@
 
 @implementation ShiuChartScrollView
 
-#pragma mark - life cycle
+#pragma mark - UIResponder (處理觸碰事件)
 
-- (id)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        self.xValue = [[NSMutableArray alloc] init];
-        self.yValue = [[NSMutableArray alloc] init];
-        [self setupInitValue:frame];
-    }
-    return self;
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 手指開始觸碰螢幕
+    [self touchesBeganOrMovedWithTouches:touches];
+    [self changeScrollViewDisplacementAmount:touches];
 }
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 手指移動
+    [self touchesBeganOrMovedWithTouches:touches];
+    [self changeScrollViewDisplacementAmount:touches];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 手指離開螢幕
+    [self touchesEndedOrCancelledWithTouches:touches];
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    // 當有突發事件發生時 (比如觸碰過程被來電打斷)
+    [self touchesEndedOrCancelledWithTouches:touches];
+}
+
+#pragma mark *  misc
+
+- (void)touchesBeganOrMovedWithTouches:(NSSet *)touches {
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:self];
+    [self setTooltipVisible:YES animated:YES atTouchPoint:touchPoint];
+    CGFloat xOffset = fmin(self.frame.size.width - self.verticalSelectionView.frame.size.width, fmax(0, touchPoint.x - (self.verticalSelectionView.frame.size.width * 0.5)));
+    self.verticalSelectionView.frame = CGRectMake(xOffset, 0, self.verticalSelectionView.frame.size.width, self.verticalSelectionView.frame.size.height);
+    [self showLabelSetText];
+}
+
+- (void)changeScrollViewDisplacementAmount:(NSSet *)touches {
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:self];
+    // 判斷是否靠近螢幕的右邊邊緣
+    if (touchPoint.x > ([UIScreen mainScreen].bounds.size.width - (DashLineWidth + 10))) {
+        if (!self.timer) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRightDisplacementAmount) userInfo:nil repeats:YES];
+        }
+    }
+    else if (touchPoint.x < (DashLineWidth + 10)) {
+        // 計算是否為左邊 兩秒就跟後端要新資料
+        if (!self.timer) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateLeftDisplacementAmount) userInfo:nil repeats:YES];
+        }
+    }
+    else {
+        [self cancelAllTask];
+    }
+}
+
+- (void)touchesEndedOrCancelledWithTouches:(NSSet *)touches {
+    [self setTooltipVisible:NO animated:YES];
+    [self showLabelSetText];
+}
+
+#pragma mark - private instance method
+
+#pragma mark * init
 
 - (void)setupInitValue:(CGRect)frame {
     [self.xValue removeAllObjects];
@@ -70,9 +123,6 @@
     [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
     [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
     
-    
-    
-    
     CGRect graphViewFrame = frame;
     graphViewFrame.origin.x = 0;
     graphViewFrame.origin.y = 0;
@@ -82,7 +132,7 @@
     self.scrollView.scrollEnabled = NO;
     CGFloat width = MAX([UIScreen mainScreen].bounds.size.width, (self.xValue.count * DashLineWidth));
     graphViewFrame.size.width = width;
-
+    
     self.chartView = [[ShiuChartView alloc] initWithFrame:graphViewFrame];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
@@ -94,12 +144,7 @@
     self.displacementAmount = 0;
 }
 
-#pragma mark - drawRect 系統會自動調用這個方法
-
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-    [self addVerticalSelectionView];
-}
+#pragma mark * misc
 
 - (void)addVerticalSelectionView {
     // 初始化紅色線
@@ -107,55 +152,11 @@
     self.verticalSelectionView.alpha = 1.0;
     self.verticalSelectionView.hidden = NO;
     [self addSubview:self.verticalSelectionView];
-
+    
     // 初始化資訊 view
     self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(50, 0, 60, 20)];
     self.tooltipView.alpha = 1.0;
     [self addSubview:self.tooltipView];
-}
-
-#pragma mark - Responder 處理觸碰事件
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // 手指開始觸碰螢幕
-    [self touchesBeganOrMovedWithTouches:touches];
-    [self changeScrollViewDisplacementAmount:touches];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    // 手指移動
-    [self touchesBeganOrMovedWithTouches:touches];
-    [self changeScrollViewDisplacementAmount:touches];
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    // 手指離開螢幕
-    [self touchesEndedOrCancelledWithTouches:touches];
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    // 當有突發事件發生時 (比如觸碰過程被來電打斷)
-    [self touchesEndedOrCancelledWithTouches:touches];
-}
-
-- (void)changeScrollViewDisplacementAmount:(NSSet *)touches {
-    UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInView:self];
-    // 判斷是否靠近螢幕的右邊邊緣
-    if (touchPoint.x > ([UIScreen mainScreen].bounds.size.width - (DashLineWidth + 10))) {
-        if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRightDisplacementAmount) userInfo:nil repeats:YES];
-        }
-    }
-    else if (touchPoint.x < (DashLineWidth + 10)) {
-        // 計算是否為左邊 兩秒就跟後端要新資料
-        if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateLeftDisplacementAmount) userInfo:nil repeats:YES];
-        }
-    }
-    else {
-        [self cancelAllTask];
-    }
 }
 
 - (void)updateRightDisplacementAmount {
@@ -197,28 +198,14 @@
     [self setupInitValue:self.frame];
 }
 
-- (void)touchesBeganOrMovedWithTouches:(NSSet *)touches {
-    UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInView:self];
-    [self setTooltipVisible:YES animated:YES atTouchPoint:touchPoint];
-    CGFloat xOffset = fmin(self.frame.size.width - self.verticalSelectionView.frame.size.width, fmax(0, touchPoint.x - (self.verticalSelectionView.frame.size.width * 0.5)));
-    self.verticalSelectionView.frame = CGRectMake(xOffset, 0, self.verticalSelectionView.frame.size.width, self.verticalSelectionView.frame.size.height);
-    [self showLabelSetText];
-}
-
-- (void)touchesEndedOrCancelledWithTouches:(NSSet *)touches {
-    [self setTooltipVisible:NO animated:YES];
-    [self showLabelSetText];
-}
-
 - (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated atTouchPoint:(CGPoint)touchPoint {
     _tooltipVisible = tooltipVisible;
-
+    
     // 將資訊 view 新增進來
     [self addSubview:self.tooltipView];
     // 將兩個 view 都放到畫面最上面
     [self bringSubviewToFront:self.tooltipView];
-
+    
     // 更新資訊view的位置
     void (^updatePosition)() = ^{
         CGPoint convertedTouchPoint = touchPoint;
@@ -232,24 +219,24 @@
         }
         self.tooltipView.frame = CGRectMake(convertedTouchPoint.x - ceil(self.tooltipView.frame.size.width * 0.5), 10, self.tooltipView.frame.size.width, self.tooltipView.frame.size.height);
     };
-
+    
     // 更新 tooltipView alpha
     void (^isVisible)() = ^{
         self.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
     };
-
+    
     if (animated) {
         if (tooltipVisible) {
             updatePosition();
         }
-
+        
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-             isVisible();
-         } completion: ^(BOOL finished) {
-             if (!tooltipVisible) {
-                 updatePosition();
-             }
-         }];
+            isVisible();
+        } completion: ^(BOOL finished) {
+            if (!tooltipVisible) {
+                updatePosition();
+            }
+        }];
     }
     else {
         updatePosition();
@@ -272,7 +259,7 @@
         CGRect newRect = [self convertRect:circleView.frame fromView:self.scrollView];
         if (CGRectIntersectsRect(newRect, self.verticalSelectionView.frame)) {
             [self.tooltipView setText:circleView.value];
-        } 
+        }
     }
 }
 
@@ -282,9 +269,22 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayRequest) object:nil];
 }
 
+#pragma mark - life cycle
+
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        self.xValue = [[NSMutableArray alloc] init];
+        self.yValue = [[NSMutableArray alloc] init];
+        [self setupInitValue:frame];
+    }
+    return self;
+}
+
+#pragma mark * override
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    [self addVerticalSelectionView];
+}
+
 @end
-
-
-
-
-
