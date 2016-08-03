@@ -45,11 +45,34 @@
 - (void)setupInitValue:(CGRect)frame {
     [self.xValue removeAllObjects];
     [self.yValue removeAllObjects];
-    for (int i = 1; i < 100; i++) {
+    
+    [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
+    for (int i = 1; i < 20; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
+        //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
     }
-
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 40]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 50]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
+    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
+    
+    
+    
+    
     CGRect graphViewFrame = frame;
     graphViewFrame.origin.x = 0;
     graphViewFrame.origin.y = 0;
@@ -81,13 +104,13 @@
 - (void)addVerticalSelectionView {
     // 初始化紅色線
     self.verticalSelectionView = [[ShiuVerticalSelectionView alloc] initWithFrame:CGRectMake(50, 0, 1, self.frame.size.height)];
-    self.verticalSelectionView.alpha = 0.0;
+    self.verticalSelectionView.alpha = 1.0;
     self.verticalSelectionView.hidden = NO;
     [self addSubview:self.verticalSelectionView];
 
     // 初始化資訊 view
-    self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(0, 0, 60, 20)];
-    self.tooltipView.alpha = 0.0;
+    self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(50, 0, 60, 20)];
+    self.tooltipView.alpha = 1.0;
     [self addSubview:self.tooltipView];
 }
 
@@ -95,7 +118,6 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // 手指開始觸碰螢幕
-    [self setVerticalSelectionViewVisible:NO animated:NO];
     [self touchesBeganOrMovedWithTouches:touches];
     [self changeScrollViewDisplacementAmount:touches];
 }
@@ -175,32 +197,17 @@
     [self setupInitValue:self.frame];
 }
 
-- (void)setVerticalSelectionViewVisible:(BOOL)verticalSelectionViewVisible animated:(BOOL)animated {
-    _verticalSelectionViewVisible = verticalSelectionViewVisible;
-
-    if (animated) {
-        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-             self.verticalSelectionView.alpha = self.verticalSelectionViewVisible ? 1.0 : 0.0;
-         } completion:nil];
-    }
-    else {
-        self.verticalSelectionView.alpha = _verticalSelectionViewVisible ? 1.0 : 0.0;
-    }
-}
-
 - (void)touchesBeganOrMovedWithTouches:(NSSet *)touches {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     [self setTooltipVisible:YES animated:YES atTouchPoint:touchPoint];
     CGFloat xOffset = fmin(self.frame.size.width - self.verticalSelectionView.frame.size.width, fmax(0, touchPoint.x - (self.verticalSelectionView.frame.size.width * 0.5)));
     self.verticalSelectionView.frame = CGRectMake(xOffset, 0, self.verticalSelectionView.frame.size.width, self.verticalSelectionView.frame.size.height);
-    [self setVerticalSelectionViewVisible:YES animated:YES];
     [self showLabelSetText];
 }
 
 - (void)touchesEndedOrCancelledWithTouches:(NSSet *)touches {
     [self setTooltipVisible:NO animated:YES];
-    [self setVerticalSelectionViewVisible:NO animated:YES];
     [self showLabelSetText];
 }
 
@@ -213,7 +220,7 @@
     [self bringSubviewToFront:self.tooltipView];
 
     // 更新資訊view的位置
-    dispatch_block_t updatePosition = ^{
+    void (^updatePosition)() = ^{
         CGPoint convertedTouchPoint = touchPoint;
         CGFloat minChartX = (self.frame.origin.x + ceil(self.tooltipView.frame.size.width * 0.5));
         if (convertedTouchPoint.x < minChartX) {
@@ -226,8 +233,9 @@
         self.tooltipView.frame = CGRectMake(convertedTouchPoint.x - ceil(self.tooltipView.frame.size.width * 0.5), 10, self.tooltipView.frame.size.width, self.tooltipView.frame.size.height);
     };
 
-    dispatch_block_t isVisibility = ^{
-        self.tooltipView.alpha = _tooltipVisible ? 1.0 : 0.0;
+    // 更新 tooltipView alpha
+    void (^isVisible)() = ^{
+        self.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
     };
 
     if (animated) {
@@ -236,7 +244,7 @@
         }
 
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-             isVisibility();
+             isVisible();
          } completion: ^(BOOL finished) {
              if (!tooltipVisible) {
                  updatePosition();
@@ -245,7 +253,7 @@
     }
     else {
         updatePosition();
-        isVisibility();
+        isVisible();
     }
 }
 
@@ -264,7 +272,7 @@
         CGRect newRect = [self convertRect:circleView.frame fromView:self.scrollView];
         if (CGRectIntersectsRect(newRect, self.verticalSelectionView.frame)) {
             [self.tooltipView setText:circleView.value];
-        }
+        } 
     }
 }
 
