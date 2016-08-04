@@ -13,7 +13,7 @@
 #define RandomColor [UIColor colorWithRed:arc4random_uniform(255) / 155.0 green:arc4random_uniform(255) / 155.0 blue:arc4random_uniform(255) / 155.0 alpha:0.7]
 #define BottomLineMargin 20
 #define XCoordinateWidth (self.frame.size.width - self.leftLineMargin)
-#define YCoordinateHeight (self.frame.size.height - 30)
+#define YCoordinateHeight (self.frame.size.height - 40)
 
 // 決定 Y 軸 的位移量
 typedef enum {
@@ -30,24 +30,14 @@ typedef enum {
 @property (assign, nonatomic) CGFloat leftLineMargin;
 @property (assign, nonatomic) CGFloat maxYValue;
 @property (assign, nonatomic) NSInteger pointCount;
-
+@property (assign, nonatomic) CGFloat scale;
 @end
 
 @implementation ShiuChartView
 
+#pragma mark - private instance method
+
 #pragma mark * init
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.backgroundColor = [UIColor whiteColor];
-        [self setupInitValues];
-
-        // 設定距離左邊界的距離
-        self.leftLineMargin = 0;
-    }
-    return self;
-}
 
 - (void)setupInitValues {
     // NSMutableArray 分配記憶體位置
@@ -61,15 +51,6 @@ typedef enum {
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.alignment = NSTextAlignmentCenter;
     self.textStyleDictionary = @{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSForegroundColorAttributeName:stringColor, NSStrokeColorAttributeName:stringColor };
-}
-
-#pragma mark - drawRect 系統會自動調用這個方法
-
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-    if (self.xValues && self.yValues) {
-        [self setupChartView];
-    }
 }
 
 - (void)setupChartView {
@@ -86,11 +67,11 @@ typedef enum {
     [self drawLineChart];
 }
 
-#pragma mark - 將 X 軸上的文字出來
+#pragma mark * 將 X 軸上的文字出來
 
 - (void)setupXaxisWithValues:(NSArray *)xValues {
     // 目前不管任何尺寸都是依照當前螢幕寬度畫19格，
-    // 所以當參數數量不足20個時，就會自動塞空的值到數量 20 為止，
+    // 所以當參數數量不足19個時，就會自動塞空的值到數量 19 為止，
     // 所以需要先將原始資料的數量存在 self.pointCount
     self.pointCount = xValues.count;
     xValues = [self organizeData:xValues];
@@ -122,7 +103,7 @@ typedef enum {
 }
 
 - (NSArray *)organizeData:(NSArray *)values {
-    // 假如參數數量不到 20 就塞到 20。
+    // 假如參數數量不到 19 就塞到 19。
     NSMutableArray *newValues = [[NSMutableArray alloc] initWithArray:values copyItems:true];
     while (newValues.count < 19) {
         [newValues addObject:@""];
@@ -130,37 +111,25 @@ typedef enum {
     return newValues;
 }
 
-#pragma mark - 取的 Y 軸最大的值
+#pragma mark * 取的 Y 軸最大的值
 
 - (void)setupYaxisWithValues:(NSArray *)values {
-    // 取的 Y 軸最大的值
-    // calculateXPoint: Y 軸距離左邊界的距離
-    // calculateYPoint: 按照比例計算 Y 距離上邊界的距離。
-//    if (values) {
-//        self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
-//        for (int i = 0; i < values.count; i++) {
-//            CGFloat calculateXPoint = self.leftLineMargin;
-//            CGFloat calculateYPoint = i * (YCoordinateHeight / values.count) + 5;
-//            [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(calculateXPoint, calculateYPoint)]];
-//        }
-//    }
-    if (values.count) {
-        self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
-        NSUInteger count = 9;
-        CGFloat scale = self.maxYValue / count;
-        for (int i = 0; i < count; i++) {
-            NSString *yValue = [NSString stringWithFormat:@"%.0f", self.maxYValue - (i * scale)];
-            CGFloat cX = self.leftLineMargin;
-            CGFloat cY = i * (YCoordinateHeight / count) + 5;
-            CGSize size = [yValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
-            self.drawAtPointBlock(cX, cY, size, yValue);
-            [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(cX, cY)]];
-        }
-    }
+    self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
 
+    // 計算 y 軸要顯示的文字
+    NSUInteger count = 7;
+    self.scale = self.maxYValue / count;
+    for (int i = 0; i < count; i++) {
+        NSString *yValue = [NSString stringWithFormat:@"%.0f", self.maxYValue - (i * self.scale)];
+        CGFloat cX = self.leftLineMargin;
+        CGFloat cY = i * (YCoordinateHeight / count);
+        CGSize size = [yValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
+        self.drawAtPointBlock(cX, cY, size, yValue);
+        [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(cX, cY)]];
+    }
 }
 
-#pragma mark - 畫背景的顏色
+#pragma mark * 畫背景的顏色
 
 - (void)drawDashLine {
     if (self.xPoints) {
@@ -202,7 +171,7 @@ typedef enum {
     }
 }
 
-#pragma mark - 畫曲線圖
+#pragma mark * 畫曲線圖
 
 - (void)drawLineChart {
     NSMutableArray *pointNormalizationArrays = [self pointsNormalization];
@@ -239,7 +208,7 @@ typedef enum {
     for (int i = 0; i < self.pointCount; i++) {
         CGFloat funcXPoint = [self.xPoints[i] CGPointValue].x;
         CGFloat yValue = [self.yValues[i] floatValue];
-        CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue)) * (YCoordinateHeight);
+        CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue + self.scale)) * (YCoordinateHeight);
         NSDictionary *pointsDictionary = @{ @"points": [NSValue valueWithCGPoint:CGPointMake(funcXPoint, funcYPoint)], @"value":self.yValues[i] };
         [finishPoints addObject:pointsDictionary];
     }
@@ -279,7 +248,28 @@ typedef enum {
     }
 }
 
+#pragma mark * init
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        [self setupInitValues];
+
+        // 設定距離左邊界的距離
+        self.leftLineMargin = 0;
+    }
+    return self;
+}
+
+#pragma mark * override
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (self.xValues && self.yValues) {
+        [self setupChartView];
+    }
+}
 
 @end
 

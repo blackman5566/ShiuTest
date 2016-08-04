@@ -106,31 +106,31 @@
     self.yValue = [[NSMutableArray alloc] init];
 
     //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
-    for (int i = 1; i < 40; i++) {
+    for (int i = 1; i < 60; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
         [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
     }
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 18]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 40]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 50]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 11]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
 
     CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
-    CGFloat height = CGRectGetHeight(frame) - 50;
+    CGFloat height = CGRectGetHeight(frame) - 80;
 
     self.yView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DashLineWidth, height)];
     self.yView.backgroundColor = [UIColor whiteColor];
