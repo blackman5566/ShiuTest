@@ -6,7 +6,7 @@
 //  Copyright © 2016年 AllenShiu. All rights reserved.
 //
 
-#import "ShiuBarChartViewV2.h"
+#import "ShiuBarChartView.h"
 #import "ShiuBar.h"
 
 #define XLabelMarginTop 5
@@ -16,14 +16,14 @@
 #define YAxisMarginTop 10
 #define LegendTextSize 10
 
-@interface ShiuBarChartViewV2 ()
+@interface ShiuBarChartView ()
 
 @property (nonatomic, strong) NSMutableArray <ShiuBar *> *bars;
 @property (nonatomic, strong) ShiuLegendView *legendView;
 
 @end
 
-@implementation ShiuBarChartViewV2
+@implementation ShiuBarChartView
 
 #pragma mark - life cycle
 
@@ -73,7 +73,7 @@
         for (NSInteger barIndex = 0; barIndex < dataset.yValues.count; barIndex++) {
             CGFloat barX = _chartMargin.left + (barIndex * (groupWidth + _data.groupSpace)) + (barTypeIndex * (barWidth + _data.itemGap));
             ShiuBar *bar = [[ShiuBar alloc] initWithFrame:CGRectMake(barX, _chartMargin.top, barWidth, barHeight)];
-            
+
             // 取得要顯示的數字
             NSNumber *yValue = dataset.yValues[barIndex];
             // 使用 isnan 判斷是否為數字，當不是數字時直接帶0。
@@ -82,18 +82,18 @@
             bar.barColor = dataset.barColor;
             // 設定 bar 背景色
             bar.backgroundColor = dataset.barbackGroudColor;
-            
+
             // 根據使用者設定，判斷是否要顯示數值
             if (self.isShowNumber) {
                 bar.barText = yValue.stringValue;
                 if (barTypeIndex) {
-                  bar.barText = [NSString stringWithFormat:@"%@ml",yValue.stringValue];
+                    bar.barText = [NSString stringWithFormat:@"%@ml", yValue.stringValue];
                 }
             }
-            
+
             // 根據使用者設定，判斷是否要顯示動畫效果
             bar.isAnimated = self.isAnimated;
-            
+
             [self.bars addObject:bar];
             [self addSubview:bar];
         }

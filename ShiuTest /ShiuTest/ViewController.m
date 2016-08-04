@@ -8,41 +8,18 @@
 
 #import "ViewController.h"
 #import "ShiuBarChartView.h"
-#import "ShiuBarChartViewV2.h"
+#import "ShiuBarChartView.h"
 #import "ShiuChartScrollView.h"
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView *barView;
 
-@property (nonatomic, strong) ShiuBarChartViewV2 *shiuBarChartViewV2;
+@property (nonatomic, strong) ShiuBarChartView *shiuBarChartView;
 
 @end
 
 @implementation ViewController
-
-#pragma mark - init
-
-- (void)setupShiuBarChartView {
-    // 第一版
-    for (int i = 0; i < 2; i++) {
-        ShiuBarChartView *barChartView = [ShiuBarChartView new];
-        CGRect newFrame = self.barView.bounds;
-        newFrame.size.width = CGRectGetWidth(self.barView.bounds) / 2;
-        newFrame.origin.x = newFrame.size.width * i;
-        barChartView.frame = newFrame;
-        barChartView.squareView.backgroundColor = (i == 0) ? [UIColor redColor] : [UIColor blueColor];
-        barChartView.maxValue = 22.0f;
-        if (i == 0) {
-            barChartView.squareValue = 22.0f;
-        }
-        else {
-            barChartView.squareValue = 5.0f;
-        }
-        [self.barView addSubview:barChartView];
-        [barChartView updateUI];
-    }
-}
 
 #pragma mark - life cycle
 
@@ -51,7 +28,7 @@
     // 第一版
     //[self setupShiuBarChartView];
     // 第二版
-    [self setupShiuBarChartViewV2];
+    [self setupShiuBarChartView];
     // 折線圖
     [self setupShiuChartView];
 }
@@ -59,19 +36,19 @@
 -(void)setupShiuChartView{
     // 使用方法
     
-    ShiuChartScrollView *shiuChartScrollView = [[ShiuChartScrollView alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.shiuBarChartViewV2.frame) , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height-CGRectGetHeight(self.shiuBarChartViewV2.frame))];
+    ShiuChartScrollView *shiuChartScrollView = [[ShiuChartScrollView alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(self.shiuBarChartView.frame) , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height-CGRectGetHeight(self.shiuBarChartView.frame))];
     shiuChartScrollView.backgroundColor = [UIColor redColor];
     [self.view addSubview:shiuChartScrollView];
 
 }
 
-- (void)setupShiuBarChartViewV2 {
+- (void)setupShiuBarChartView {
     // 產生參數 有多少數量就代表會產生幾筆資料
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals3 = [[NSMutableArray alloc] init];
     double mult = 5 * 1000.f;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 1; i++) {
         double val = (double)(arc4random_uniform(mult) + 3.0);
         [yVals1 addObject:@(val)];
         val = (double)(arc4random_uniform(mult) + 3.0);
@@ -99,28 +76,28 @@
     data.groupSpace = 40;
 
     // 初始化 shiuBarChartViewV2
-    self.shiuBarChartViewV2 = [[ShiuBarChartViewV2 alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 200)];
+    self.shiuBarChartView = [[ShiuBarChartView alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 200)];
     // 設定 Bar View 與四個邊界的距離
-    self.shiuBarChartViewV2.chartMargin = UIEdgeInsetsMake(45, 15, 40, 15);
+    self.shiuBarChartView.chartMargin = UIEdgeInsetsMake(45, 15, 40, 15);
     // 設定 資料
-    self.shiuBarChartViewV2.data = data;
+    self.shiuBarChartView.data = data;
     // 設定是否要動畫效果
-    self.shiuBarChartViewV2.isAnimated = YES;
+    self.shiuBarChartView.isAnimated = YES;
     // 設定是否要顯示x軸資訊
-    self.shiuBarChartViewV2.isShowX = YES;
+    self.shiuBarChartView.isShowX = YES;
     //設定是否要顯示y軸資訊
-    self.shiuBarChartViewV2.isShowY = NO;
+    self.shiuBarChartView.isShowY = NO;
     // 設定是否要顯示每個bar 上的數字
-    self.shiuBarChartViewV2.isShowNumber = YES;
+    self.shiuBarChartView.isShowNumber = YES;
     // 設定 種類的右上角view的顯示方式，直式的或是橫式的。
-    self.shiuBarChartViewV2.legendView.alignment = LegendAlignmentHorizontal;
-    [self.view addSubview:self.shiuBarChartViewV2];
+    self.shiuBarChartView.legendView.alignment = LegendAlignmentHorizontal;
+    [self.view addSubview:self.shiuBarChartView];
     // 顯示 view
-    [self.shiuBarChartViewV2 show];
+    [self.shiuBarChartView show];
 
     // 根據計算取得 legendCenter 讓顯示在右上角
-    CGPoint legendCenter = CGPointMake([UIScreen mainScreen].bounds.size.width - self.shiuBarChartViewV2.legendView.bounds.size.width / 2, self.shiuBarChartViewV2.legendView.bounds.size.height / 2);
-    self.shiuBarChartViewV2.legendView.center = legendCenter;
+    CGPoint legendCenter = CGPointMake([UIScreen mainScreen].bounds.size.width - self.shiuBarChartView.legendView.bounds.size.width / 2, self.shiuBarChartView.legendView.bounds.size.height / 2);
+    self.shiuBarChartView.legendView.center = legendCenter;
 }
 
 @end

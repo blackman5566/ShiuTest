@@ -61,21 +61,21 @@
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
     [self setTooltipVisible:YES animated:YES atTouchPoint:touchPoint];
-    
+
     CGFloat xOffset1 = CGRectGetWidth(self.frame) - CGRectGetWidth(self.verticalSelectionView.frame);
     CGFloat xOffset2 = fmax(0, touchPoint.x - (CGRectGetWidth(self.verticalSelectionView.frame) * 0.5));
     CGFloat xOffset = fmin(xOffset1, xOffset2);
     CGFloat width = CGRectGetWidth(self.verticalSelectionView.frame);
     CGFloat height = CGRectGetHeight(self.verticalSelectionView.frame);
     self.verticalSelectionView.frame = CGRectMake(xOffset, 0, width, height);
-    
+
     [self showLabelSetText];
 }
 
 - (void)changeScrollViewDisplacementAmount:(NSSet *)touches {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-    
+
     BOOL isMoveToRight = (touchPoint.x > (CGRectGetWidth([UIScreen mainScreen].bounds) - (DashLineWidth + 10)));
     BOOL isMoveToLeft = (touchPoint.x < (DashLineWidth + 10));
     if (isMoveToRight || isMoveToLeft) {
@@ -103,46 +103,45 @@
 - (void)setupInitValue:(CGRect)frame {
     self.xValue = [[NSMutableArray alloc] init];
     self.yValue = [[NSMutableArray alloc] init];
-    
+
     [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
-    for (int i = 1; i < 20; i++) {
+    for (int i = 1; i < 40; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-        //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
+        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
     }
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 40]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 50]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
-    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
-    
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 40]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 50]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
+//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
     CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
     CGFloat height = CGRectGetHeight(frame) - 50;
     self.chartView = [[ShiuChartView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
     self.chartView.chartColor = [UIColor blueColor];
-    
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds), height)];
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.scrollEnabled = NO;
     self.scrollView.contentSize = CGSizeMake(width, height);
     [self.scrollView addSubview:self.chartView];
     [self addSubview:self.scrollView];
     [self sendSubviewToBack:self.scrollView];
-    
+
     self.displacementAmount = 0;
 }
 
@@ -152,7 +151,7 @@
     // 初始化紅色線
     self.verticalSelectionView = [[ShiuVerticalSelectionView alloc] initWithFrame:CGRectMake(50, 0, 1, CGRectGetHeight(self.frame))];
     [self addSubview:self.verticalSelectionView];
-    
+
     // 初始化資訊 view
     self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(50, 0, 60, 20)];
     [self addSubview:self.tooltipView];
@@ -201,12 +200,12 @@
 
 - (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated atTouchPoint:(CGPoint)touchPoint {
     _tooltipVisible = tooltipVisible;
-    
+
     // 將資訊 view 新增進來
     [self addSubview:self.tooltipView];
     // 將兩個 view 都放到畫面最上面
     [self bringSubviewToFront:self.tooltipView];
-    
+
     // 更新資訊view的位置
     __weak typeof(self) weakSelf = self;
     void (^updatePosition)() = ^{
@@ -215,30 +214,30 @@
         if (convertedTouchPoint.x < minChartX) {
             convertedTouchPoint.x = minChartX;
         }
-        
+
         CGFloat maxChartX = (CGRectGetMinY(weakSelf.frame) + CGRectGetWidth(weakSelf.frame) - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
         if (convertedTouchPoint.x > maxChartX) {
             convertedTouchPoint.x = maxChartX;
         }
-        
+
         CGFloat x = convertedTouchPoint.x - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5);
         CGFloat y = 10;
         CGFloat width = CGRectGetWidth(weakSelf.tooltipView.frame);
         CGFloat height = CGRectGetHeight(weakSelf.tooltipView.frame);
         weakSelf.tooltipView.frame = CGRectMake(x, y, width, height);
     };
-    
+
     if (animated) {
         if (tooltipVisible) {
             updatePosition();
         }
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-            weakSelf.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
-        } completion: ^(BOOL finished) {
-            if (!tooltipVisible) {
-                updatePosition();
-            }
-        }];
+             weakSelf.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
+         } completion: ^(BOOL finished) {
+             if (!tooltipVisible) {
+                 updatePosition();
+             }
+         }];
     }
     else {
         updatePosition();

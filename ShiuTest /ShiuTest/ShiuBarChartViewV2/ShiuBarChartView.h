@@ -10,7 +10,7 @@
 #import "ShiuLegendView.h"
 #import "ShiuBarChartData.h"
 
-@interface ShiuBarChartViewV2 : UIView
+@interface ShiuBarChartView : UIView
 
 /**
    @abstract  legendView
