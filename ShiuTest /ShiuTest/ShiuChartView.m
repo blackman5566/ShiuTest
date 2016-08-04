@@ -13,7 +13,7 @@
 #define RandomColor [UIColor colorWithRed:arc4random_uniform(255) / 155.0 green:arc4random_uniform(255) / 155.0 blue:arc4random_uniform(255) / 155.0 alpha:0.7]
 #define BottomLineMargin 20
 #define XCoordinateWidth (self.frame.size.width - self.leftLineMargin)
-#define YCoordinateHeight (self.frame.size.height - 50)
+#define YCoordinateHeight (self.frame.size.height - 30)
 
 // 決定 Y 軸 的位移量
 typedef enum {
@@ -89,7 +89,7 @@ typedef enum {
 #pragma mark - 將 X 軸上的文字出來
 
 - (void)setupXaxisWithValues:(NSArray *)xValues {
-    // 目前不管任何尺寸都是依照當前螢幕寬度畫20格，
+    // 目前不管任何尺寸都是依照當前螢幕寬度畫19格，
     // 所以當參數數量不足20個時，就會自動塞空的值到數量 20 為止，
     // 所以需要先將原始資料的數量存在 self.pointCount
     self.pointCount = xValues.count;
@@ -124,7 +124,7 @@ typedef enum {
 - (NSArray *)organizeData:(NSArray *)values {
     // 假如參數數量不到 20 就塞到 20。
     NSMutableArray *newValues = [[NSMutableArray alloc] initWithArray:values copyItems:true];
-    while (newValues.count < 20) {
+    while (newValues.count < 19) {
         [newValues addObject:@""];
     }
     return newValues;
@@ -136,14 +136,28 @@ typedef enum {
     // 取的 Y 軸最大的值
     // calculateXPoint: Y 軸距離左邊界的距離
     // calculateYPoint: 按照比例計算 Y 距離上邊界的距離。
-    if (values) {
+//    if (values) {
+//        self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
+//        for (int i = 0; i < values.count; i++) {
+//            CGFloat calculateXPoint = self.leftLineMargin;
+//            CGFloat calculateYPoint = i * (YCoordinateHeight / values.count) + 5;
+//            [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(calculateXPoint, calculateYPoint)]];
+//        }
+//    }
+    if (values.count) {
         self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
-        for (int i = 0; i < values.count; i++) {
-            CGFloat calculateXPoint = self.leftLineMargin;
-            CGFloat calculateYPoint = i * (YCoordinateHeight / values.count) + 5;
-            [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(calculateXPoint, calculateYPoint)]];
+        NSUInteger count = 9;
+        CGFloat scale = self.maxYValue / count;
+        for (int i = 0; i < count; i++) {
+            NSString *yValue = [NSString stringWithFormat:@"%.0f", self.maxYValue - (i * scale)];
+            CGFloat cX = self.leftLineMargin;
+            CGFloat cY = i * (YCoordinateHeight / count) + 5;
+            CGSize size = [yValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
+            self.drawAtPointBlock(cX, cY, size, yValue);
+            [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(cX, cY)]];
         }
     }
+
 }
 
 #pragma mark - 畫背景的顏色
@@ -153,7 +167,7 @@ typedef enum {
 
         // 背景顏色初始化設定寬度透明度
         CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGContextSetLineWidth(ctx, DashLineWidth);
+        CGContextSetLineWidth(ctx, 1);
         CGContextSetLineCap(ctx, kCGLineCapSquare);
         CGContextSetAlpha(ctx, 0.6);
 
@@ -161,7 +175,7 @@ typedef enum {
         CGPoint minYPoint = [[self.yPoints firstObject] CGPointValue];
         NSMutableArray *localXpoints = [self.xPoints mutableCopy];
         for (NSInteger index = 0; index < localXpoints.count; index++) {
-            (index % 2 == 0) ? [[UIColor whiteColor] setStroke] : [[UIColor lightGrayColor] setStroke];
+            [[UIColor lightGrayColor] setStroke];
             CGPoint xPoint = [localXpoints[index] CGPointValue];
             CGMutablePathRef path = CGPathCreateMutable();
             CGPathMoveToPoint(path, nil, xPoint.x, xPoint.y);
@@ -170,6 +184,21 @@ typedef enum {
             CGContextDrawPath(ctx, kCGPathEOFillStroke);
             CGPathRelease(path);
         }
+        CGPoint maxXPoint = [[self.xPoints lastObject] CGPointValue];
+        // 画横虚线
+        CGFloat alilengths[2] = { 5, 3 };
+        CGContextSetLineDash(ctx, 0, alilengths, 2);
+        for (NSValue *yP in self.yPoints) {
+            CGPoint yPoint = [yP CGPointValue];
+            CGMutablePathRef path = CGPathCreateMutable();
+            CGPathMoveToPoint(path, nil, yPoint.x, yPoint.y);
+            CGPathAddLineToPoint(path, nil, maxXPoint.x - 5, yPoint.y);
+            CGContextAddPath(ctx, path);
+
+            CGContextDrawPath(ctx, kCGPathEOFillStroke);
+            CGPathRelease(path);
+        }
+
     }
 }
 
@@ -210,7 +239,7 @@ typedef enum {
     for (int i = 0; i < self.pointCount; i++) {
         CGFloat funcXPoint = [self.xPoints[i] CGPointValue].x;
         CGFloat yValue = [self.yValues[i] floatValue];
-        CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue + 100)) * (YCoordinateHeight);
+        CGFloat funcYPoint = (YCoordinateHeight) - (yValue / (self.maxYValue)) * (YCoordinateHeight);
         NSDictionary *pointsDictionary = @{ @"points": [NSValue valueWithCGPoint:CGPointMake(funcXPoint, funcYPoint)], @"value":self.yValues[i] };
         [finishPoints addObject:pointsDictionary];
     }

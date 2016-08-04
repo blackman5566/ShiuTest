@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) ShiuChartTooltipView *tooltipView;
 @property (nonatomic, strong) ShiuChartView *chartView;
+@property (nonatomic, strong) UIView *yView;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSMutableArray *xValue;
@@ -104,10 +105,10 @@
     self.xValue = [[NSMutableArray alloc] init];
     self.yValue = [[NSMutableArray alloc] init];
 
-    [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
+    //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
     for (int i = 1; i < 40; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
+        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
     }
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 10]];
@@ -127,16 +128,29 @@
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
 //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
+
     CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
     CGFloat height = CGRectGetHeight(frame) - 50;
+
+    self.yView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DashLineWidth, height)];
+    self.yView.backgroundColor = [UIColor whiteColor];
+    [self addSubview:self.yView];
     self.chartView = [[ShiuChartView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
     self.chartView.chartColor = [UIColor blueColor];
+    __weak typeof(self) weakSelf = self;
+    self.chartView.drawAtPointBlock = ^(CGFloat cX, CGFloat cY, CGSize size, NSString *yValue){
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(cX, cY - (size.height / 2), size.width, size.height)];
+        label.font = [UIFont systemFontOfSize:14];
+        label.text = yValue;
+        [weakSelf.yView addSubview:label];
+    };
 
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds), height)];
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(DashLineWidth, 0, CGRectGetWidth([UIScreen mainScreen].bounds) - DashLineWidth, height)];
     self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.scrollEnabled = NO;
+    self.scrollView.scrollEnabled = YES;
     self.scrollView.contentSize = CGSizeMake(width, height);
     [self.scrollView addSubview:self.chartView];
     [self addSubview:self.scrollView];
@@ -161,7 +175,7 @@
     // 開始向右滑動
     // 當 distanceFromRight 等於 width 就代表說已經到底了，
     // 使用 roundf 是因為不同尺寸下會有些許誤差值，所以用無條件捨棄方式比對。
-    CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds);
+    CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds) - DashLineWidth;
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
     BOOL isMoveRightMaxLimit = (roundf(distanceFromRight) == width);
