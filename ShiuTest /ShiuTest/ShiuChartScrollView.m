@@ -229,7 +229,7 @@
             convertedTouchPoint.x = minChartX;
         }
 
-        CGFloat maxChartX = (CGRectGetMinY(weakSelf.frame) + CGRectGetWidth(weakSelf.frame) - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
+        CGFloat maxChartX = (CGRectGetMinX(weakSelf.frame) + CGRectGetWidth(weakSelf.frame) - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
         if (convertedTouchPoint.x > maxChartX) {
             convertedTouchPoint.x = maxChartX;
         }
