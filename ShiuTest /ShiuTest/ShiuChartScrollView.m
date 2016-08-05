@@ -178,7 +178,9 @@
     CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds) - DashLineWidth;
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
-    BOOL isMoveRightMaxLimit = (roundf(distanceFromRight) == width);
+    NSLog(@"distanceFromRight  = %f", distanceFromRight);
+    NSLog(@"width = %f", width);
+    BOOL isMoveRightMaxLimit = (roundf(distanceFromRight) == roundf(width));
     if (isMoveRightMaxLimit) {
         [self cancelAllTask];
     }
