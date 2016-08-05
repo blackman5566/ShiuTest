@@ -48,7 +48,7 @@
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals3 = [[NSMutableArray alloc] init];
     double mult = 5 * 1000.f;
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 3; i++) {
         double val = (double)(arc4random_uniform(mult) + 3.0);
         [yVals1 addObject:@(val)];
         val = (double)(arc4random_uniform(mult) + 3.0);

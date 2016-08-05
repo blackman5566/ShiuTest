@@ -14,7 +14,8 @@
 #define BottomLineMargin 20
 #define XCoordinateWidth (self.frame.size.width - self.leftLineMargin)
 #define YCoordinateHeight (self.frame.size.height - 40)
-
+#define pointsNormalization(ARG) \
+    ((YCoordinateHeight) - (ARG / (self.maxYValue + self.scale)) * (YCoordinateHeight))
 // 決定 Y 軸 的位移量
 typedef enum {
     DisplacementAmountUp = -6,
@@ -23,14 +24,17 @@ typedef enum {
 
 @interface ShiuChartView ()
 
+@property (strong, nonatomic) NSArray *yValueRange;
 @property (strong, nonatomic) NSMutableArray *xPoints;
 @property (strong, nonatomic) NSMutableArray *yPoints;
+@property (strong, nonatomic) NSMutableArray *yValueStrings;
 @property (strong, nonatomic) NSDictionary *textStyleDictionary;
 
 @property (assign, nonatomic) CGFloat leftLineMargin;
-@property (assign, nonatomic) CGFloat maxYValue;
+@property (assign, nonatomic) NSInteger maxYValue;
 @property (assign, nonatomic) NSInteger pointCount;
 @property (assign, nonatomic) CGFloat scale;
+
 @end
 
 @implementation ShiuChartView
@@ -44,6 +48,8 @@ typedef enum {
     self.xPoints = [NSMutableArray array];
     self.yPoints = [NSMutableArray array];
     self.circleViewArray = [NSMutableArray array];
+    self.yValueStrings = [NSMutableArray array];
+    self.yValueRange = @[@"5", @"10", @"15", @"20", @"25", @"30", @"35", @"40", @"50", @"100", @"150", @"200", @"250", @"300"];
 
     // 設定顯示文字大小與相關參數設定
     UIFont *font = [UIFont systemFontOfSize:14];
@@ -102,27 +108,16 @@ typedef enum {
     }
 }
 
-- (NSArray *)organizeData:(NSArray *)values {
-    // 假如參數數量不到 19 就塞到 19。
-    NSMutableArray *newValues = [[NSMutableArray alloc] initWithArray:values copyItems:true];
-    while (newValues.count < 19) {
-        [newValues addObject:@""];
-    }
-    return newValues;
-}
-
 #pragma mark * 取的 Y 軸最大的值
 
 - (void)setupYaxisWithValues:(NSArray *)values {
-    self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
-
-    // 計算 y 軸要顯示的文字
-    NSUInteger count = 7;
-    self.scale = self.maxYValue / count;
+    // 計算 y 軸要顯示的文字的相對位置
+    [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(0, 0)]];
+    NSInteger count = [self calculaterHorizontalLineCount:values];
     for (int i = 0; i < count; i++) {
-        NSString *yValue = [NSString stringWithFormat:@"%.0f", self.maxYValue - (i * self.scale)];
+        NSString *yValue =  self.yValueStrings[i];
         CGFloat cX = self.leftLineMargin;
-        CGFloat cY = i * (YCoordinateHeight / count);
+        CGFloat cY = pointsNormalization([yValue floatValue]);
         CGSize size = [yValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
         self.drawAtPointBlock(cX, cY, size, yValue);
         [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(cX, cY)]];
@@ -153,8 +148,9 @@ typedef enum {
             CGContextDrawPath(ctx, kCGPathEOFillStroke);
             CGPathRelease(path);
         }
+
+        // 畫橫線
         CGPoint maxXPoint = [[self.xPoints lastObject] CGPointValue];
-        // 画横虚线
         CGFloat alilengths[2] = { 5, 3 };
         CGContextSetLineDash(ctx, 0, alilengths, 2);
         for (NSValue *yP in self.yPoints) {
@@ -167,7 +163,6 @@ typedef enum {
             CGContextDrawPath(ctx, kCGPathEOFillStroke);
             CGPathRelease(path);
         }
-
     }
 }
 
@@ -201,6 +196,16 @@ typedef enum {
     [self.layer insertSublayer:lineLayer atIndex:0];
 }
 
+#pragma mark * misc
+
+- (NSArray *)organizeData:(NSArray *)values {
+    // 假如參數數量不到 19 就塞到 19。
+    NSMutableArray *newValues = [[NSMutableArray alloc] initWithArray:values copyItems:true];
+    while (newValues.count < 19) {
+        [newValues addObject:@""];
+    }
+    return newValues;
+}
 - (NSMutableArray *)pointsNormalization {
     // 將 X Y 軸的資料做最後的整理
     // 正規化 Y 軸，讓每一點根據目前所設定的畫面大小畫出相對的點，才不會跑出範圍外。
@@ -246,6 +251,50 @@ typedef enum {
         [self.circleViewArray addObject:circle];
         [self addSubview:circle];
     }
+}
+
+- (NSInteger)calculaterHorizontalLineCount:(NSArray *)values {
+    [self calculaterMaxYValue:values];
+    NSInteger count = 0;
+    for (NSInteger indexValue = 1; indexValue < INT_MAX; indexValue++) {
+        if (indexValue >= self.maxYValue) {
+            count = [self calculaterCount:indexValue];
+            break;
+        }
+    }
+    self.scale = self.maxYValue / count + 1;
+    return count;
+}
+
+- (NSInteger)calculaterCount:(NSInteger)indexValue {
+    NSInteger displayGrid = 4;
+    [self.yValueStrings addObject:@"ml"];
+    for (int index = 0; index < self.yValueRange.count; index++) {
+        if ((self.maxYValue / [self.yValueRange[index] integerValue]) <= displayGrid) {
+            for (NSInteger i = self.maxYValue; i >= 1; i--) {
+                if ((i % [self.yValueRange[index] integerValue]) == 0) {
+                    [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", i]];
+                }
+            }
+            displayGrid = (self.maxYValue / [self.yValueRange[index] integerValue]) + 1;
+            break;
+        }
+    }
+
+    return displayGrid;
+}
+
+- (void)calculaterMaxYValue:(NSArray *)values {
+    self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
+    NSInteger rangeValue = 5;
+    if (self.maxYValue > 100) {
+        rangeValue = 50;
+    }
+
+    if ((self.maxYValue % rangeValue)) {
+        self.maxYValue = (self.maxYValue + rangeValue) - (self.maxYValue % rangeValue);
+    }
+    NSLog(@"maxYValue = %d", self.maxYValue);
 }
 
 #pragma mark * init

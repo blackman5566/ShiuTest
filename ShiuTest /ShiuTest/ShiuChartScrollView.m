@@ -106,28 +106,28 @@
     self.yValue = [[NSMutableArray alloc] init];
 
     //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
-    for (int i = 1; i < 60; i++) {
+    for (int i = 1; i < 40; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
+        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 50]];
     }
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 18]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 11]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
-//    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 18]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 11]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
+    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
 
     CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
     CGFloat height = CGRectGetHeight(frame) - 80;
@@ -147,10 +147,9 @@
         [weakSelf.yView addSubview:label];
     };
 
-
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(DashLineWidth, 0, CGRectGetWidth([UIScreen mainScreen].bounds) - DashLineWidth, height)];
     self.scrollView.showsHorizontalScrollIndicator = NO;
-    self.scrollView.scrollEnabled = YES;
+    self.scrollView.scrollEnabled = NO;
     self.scrollView.contentSize = CGSizeMake(width, height);
     [self.scrollView addSubview:self.chartView];
     [self addSubview:self.scrollView];
@@ -178,8 +177,6 @@
     CGFloat width = CGRectGetWidth([UIScreen mainScreen].bounds) - DashLineWidth;
     CGFloat contentYoffset = self.scrollView.contentOffset.x;
     CGFloat distanceFromRight = self.scrollView.contentSize.width - contentYoffset;
-    NSLog(@"distanceFromRight  = %f", distanceFromRight);
-    NSLog(@"width = %f", width);
     BOOL isMoveRightMaxLimit = (roundf(distanceFromRight) == roundf(width));
     if (isMoveRightMaxLimit) {
         [self cancelAllTask];
