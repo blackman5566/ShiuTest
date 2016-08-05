@@ -114,6 +114,7 @@ typedef enum {
     // 計算 y 軸要顯示的文字的相對位置
     [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(0, 0)]];
     NSInteger count = [self calculaterHorizontalLineCount:values];
+    //NSLog(@"count = %d", count);
     for (int i = 0; i < count; i++) {
         NSString *yValue =  self.yValueStrings[i];
         CGFloat cX = self.leftLineMargin;
@@ -153,16 +154,29 @@ typedef enum {
         CGPoint maxXPoint = [[self.xPoints lastObject] CGPointValue];
         CGFloat alilengths[2] = { 5, 3 };
         CGContextSetLineDash(ctx, 0, alilengths, 2);
-        for (NSValue *yP in self.yPoints) {
-            CGPoint yPoint = [yP CGPointValue];
+        for (NSInteger index = 0; index < self.yPoints.count; index++) {
+            NSValue *ypoint = self.yPoints[index];
+            CGPoint yPoint = [ypoint CGPointValue];
             CGMutablePathRef path = CGPathCreateMutable();
             CGPathMoveToPoint(path, nil, yPoint.x, yPoint.y);
             CGPathAddLineToPoint(path, nil, maxXPoint.x - 5, yPoint.y);
             CGContextAddPath(ctx, path);
-
             CGContextDrawPath(ctx, kCGPathEOFillStroke);
             CGPathRelease(path);
         }
+
+
+
+//        for (NSValue *yP in self.yPoints) {
+//            CGPoint yPoint = [yP CGPointValue];
+//            CGMutablePathRef path = CGPathCreateMutable();
+//            CGPathMoveToPoint(path, nil, yPoint.x, yPoint.y);
+//            CGPathAddLineToPoint(path, nil, maxXPoint.x - 5, yPoint.y);
+//            CGContextAddPath(ctx, path);
+//
+//            CGContextDrawPath(ctx, kCGPathEOFillStroke);
+//            CGPathRelease(path);
+//        }
     }
 }
 
@@ -267,21 +281,36 @@ typedef enum {
 }
 
 - (NSInteger)calculaterCount:(NSInteger)indexValue {
-    NSInteger displayGrid = 4;
-    [self.yValueStrings addObject:@"ml"];
+//    [self.yValueStrings addObject:@"ml"];
+//    for (int index = 0; index < self.yValueRange.count; index++) {
+//        if ((self.maxYValue / [self.yValueRange[index] integerValue]) <= displayGrid) {
+//            for (NSInteger i = self.maxYValue; i >= 1; i--) {
+//                if ((i % [self.yValueRange[index] integerValue]) == 0) {
+//                    [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", i]];
+//                }
+//            }
+//            displayGrid = (self.maxYValue / [self.yValueRange[index] integerValue]) + 1;
+//            break;
+//        }
+//    }
+    NSInteger value = 0;
     for (int index = 0; index < self.yValueRange.count; index++) {
-        if ((self.maxYValue / [self.yValueRange[index] integerValue]) <= displayGrid) {
-            for (NSInteger i = self.maxYValue; i >= 1; i--) {
-                if ((i % [self.yValueRange[index] integerValue]) == 0) {
-                    [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", i]];
-                }
-            }
-            displayGrid = (self.maxYValue / [self.yValueRange[index] integerValue]) + 1;
+        value = [self.yValueRange[index] integerValue];
+        if (1 > (self.maxYValue - (value * 4))) {
             break;
         }
     }
-
-    return displayGrid;
+    [self.yValueStrings addObject:@"ml"];
+    [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", self.maxYValue]];
+    for (int c = 1; c <= 4; c++) {
+        if (1 < (self.maxYValue - (value * c))) {
+            [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", self.maxYValue - value * c]];
+        }
+        else {
+            break;
+        }
+    }
+    return self.yValueStrings.count ;
 }
 
 - (void)calculaterMaxYValue:(NSArray *)values {
@@ -294,7 +323,6 @@ typedef enum {
     if ((self.maxYValue % rangeValue)) {
         self.maxYValue = (self.maxYValue + rangeValue) - (self.maxYValue % rangeValue);
     }
-    NSLog(@"maxYValue = %d", self.maxYValue);
 }
 
 #pragma mark * init
