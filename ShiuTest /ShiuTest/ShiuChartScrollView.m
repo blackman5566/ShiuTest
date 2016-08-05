@@ -108,7 +108,7 @@
     //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
     for (int i = 1; i < 40; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 1000]];
+        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 30]];
     }
     //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
     //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 18]];
