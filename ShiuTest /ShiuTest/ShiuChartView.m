@@ -15,7 +15,8 @@
 #define XCoordinateWidth (self.frame.size.width - self.leftLineMargin)
 #define YCoordinateHeight (self.frame.size.height - 40)
 #define pointsNormalization(ARG) \
-((YCoordinateHeight) - (ARG / (self.maxYValue + self.scale)) * (YCoordinateHeight))
+    ((YCoordinateHeight) - (ARG / (self.maxYValue + self.scale)) * (YCoordinateHeight))
+
 // 決定 Y 軸 的位移量
 typedef enum {
     DisplacementAmountUp = -6,
@@ -50,7 +51,7 @@ typedef enum {
     self.circleViewArray = [NSMutableArray array];
     self.yValueStrings = [NSMutableArray array];
     self.yValueRange = @[@"5", @"10", @"15", @"20", @"25", @"30", @"35", @"40", @"50", @"100", @"150", @"200", @"250", @"300"];
-    
+
     // 設定顯示文字大小與相關參數設定
     UIFont *font = [UIFont systemFontOfSize:14];
     UIColor *stringColor = [UIColor blackColor];
@@ -62,13 +63,13 @@ typedef enum {
 - (void)setupChartView {
     // 將 x 軸上的值畫出來
     [self setupXaxisWithValues:self.xValues];
-    
+
     // 將 y 軸上最大的值取出來，之後要正規劃，讓點不超出範圍。
     [self setupYaxisWithValues:self.yValues];
-    
+
     // 將背景畫出來
     [self drawDashLine];
-    
+
     // 將可愛的線畫出來嚕
     [self drawLineChart];
 }
@@ -93,14 +94,18 @@ typedef enum {
         CGFloat fristGap = DashLineWidth / 2;
         CGFloat widthGap = (DashLineWidth * index) + self.leftLineMargin;
         calculateXPoint = fristGap + widthGap;
-        
+
         CGFloat calculateYPoint = self.frame.size.height - BottomLineMargin;
         NSString *xValue = xValues[index];
         CGSize size = [xValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
         NSInteger displacementAmount = 0;
         displacementAmount = (index % 2) ? DisplacementAmountDown : DisplacementAmountUp;
-        [xValue drawAtPoint:CGPointMake(calculateXPoint - size.width * 0.5, calculateYPoint + displacementAmount) withAttributes:self.textStyleDictionary];
-        
+        UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(calculateXPoint - size.width * 0.5, calculateYPoint + displacementAmount, size.width, size.height)];
+        valueLabel.font = [UIFont systemFontOfSize:14];
+        valueLabel.backgroundColor = [UIColor clearColor];
+        valueLabel.text = xValue;
+        [self addSubview:valueLabel];
+
         // 最後將 xPoint 存起來
         // calculateXPoint: 計算後的 X 位置
         // self.frame.size.height: 當畫背景時需要 Y 的參數，所以直接取當前畫面的高直接畫到滿。
@@ -117,7 +122,7 @@ typedef enum {
     // value 要顯示的參數
     // xPoint 參數的 x 點
     // yPoint 參數的 y 點
-    // size 計算參數大小
+    // size 計算參數寬度大小
     // drawAtPointBlock 因為 y 軸的 view 是在外面，所以用此 Block 做更新。
     [self.yPoints addObject:[NSValue valueWithCGPoint:CGPointMake(0, 0)]];
     NSInteger count = [self calculaterHorizontalLineCount:values];
@@ -135,13 +140,13 @@ typedef enum {
 
 - (void)drawDashLine {
     if (self.xPoints) {
-        
+
         // 背景顏色初始化設定寬度透明度
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         CGContextSetLineWidth(ctx, 1);
         CGContextSetLineCap(ctx, kCGLineCapSquare);
         CGContextSetAlpha(ctx, 0.6);
-        
+
         // index 將相對的背景顏色畫出來
         CGPoint minYPoint = [[self.yPoints firstObject] CGPointValue];
         NSMutableArray *localXpoints = [self.xPoints mutableCopy];
@@ -155,7 +160,7 @@ typedef enum {
             CGContextDrawPath(ctx, kCGPathEOFillStroke);
             CGPathRelease(path);
         }
-        
+
         // 畫橫線
         CGPoint maxXPoint = [[self.xPoints lastObject] CGPointValue];
         CGFloat alilengths[2] = { 5, 3 };
@@ -192,10 +197,10 @@ typedef enum {
             [lineChartPath stroke];
         }
     }
-    
+
     // 畫出每一個點，但是這裡用 Button 較彈性。
     [self addCircularButton:pointNormalizationArrays];
-    
+
     // 初始化 CAShapeLayer 將線畫出來
     CAShapeLayer *lineLayer = [self setUpLineLayer];
     lineLayer.path = lineChartPath.CGPath;
@@ -285,7 +290,7 @@ typedef enum {
             break;
         }
     }
-    
+
     // yValueStrings 負責存放要顯示的參數
     // 先將最大值與ml存起來
     // 接著計算利用迴圈開始倍數相減
@@ -306,9 +311,9 @@ typedef enum {
 }
 
 - (void)calculaterMaxYValue:(NSArray *)values {
-    // 為了要讓 y 軸的數值看起來較漂亮如 200 150 100 等延續下去，
+    // 為了要讓 y 軸的數值看起來漂亮如 200 150 100 等延續下去，
     // 所以要做正規劃的計算
-    // maxYValue 當前array 最大值
+    // maxYValue 當前 array 最大值
     // rangeValue 代表要正規劃的範圍，比如說 maxYValue 大於100 ， rangeValue會等於50
     // 接著條件判斷 maxYValue 除以 rangeValue 是否餘數為0
     // 當為 0 就代表此最大值數字是 50 的倍數，就不做正規劃
@@ -317,13 +322,13 @@ typedef enum {
     // self.maxYValue = (self.maxYValue + rangeValue) - (self.maxYValue % rangeValue);
     //   maxYValue    = (     235       +     50    ) - (     235       %     50    )
     // 最後 maxYValue 計算出來的值會是 250
-    
+
     self.maxYValue = [[values valueForKeyPath:@"@max.intValue"] intValue];
     NSInteger rangeValue = 5;
     if (self.maxYValue > 100) {
         rangeValue = 50;
     }
-    
+
     if ((self.maxYValue % rangeValue)) {
         self.maxYValue = (self.maxYValue + rangeValue) - (self.maxYValue % rangeValue);
     }
@@ -336,7 +341,7 @@ typedef enum {
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self setupInitValues];
-        
+
         // 設定距離左邊界的距離
         self.leftLineMargin = 0;
     }

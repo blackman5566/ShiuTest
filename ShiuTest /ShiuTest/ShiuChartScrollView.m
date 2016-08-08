@@ -23,10 +23,10 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSMutableArray *xValue;
 @property (nonatomic, strong) NSMutableArray *yValue;
+@property (nonatomic, strong) UIView *moveView;
 
 @property (nonatomic, assign) CGFloat displacementAmount;
-@property (nonatomic, assign) BOOL tooltipVisible;
-@property (nonatomic, assign) BOOL verticalSelectionViewVisible;
+@property (nonatomic, assign) BOOL isTouchPointInMoveView;
 
 @end
 
@@ -36,24 +36,37 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // 手指開始觸碰螢幕
-    [self touchesBeganOrMovedWithTouches:touches];
-    [self changeScrollViewDisplacementAmount:touches];
+    // 判斷是否在 moveView 的範圍內
+    CGPoint touchPoint = [[touches anyObject] locationInView:self];
+    if (CGRectContainsPoint(self.moveView.frame, touchPoint)) {
+        self.isTouchPointInMoveView = YES;
+        [self touchesBeganOrMovedWithTouches:touches];
+        [self changeScrollViewDisplacementAmount:touches];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     // 手指移動
-    [self touchesBeganOrMovedWithTouches:touches];
-    [self changeScrollViewDisplacementAmount:touches];
+    if (self.isTouchPointInMoveView) {
+        [self touchesBeganOrMovedWithTouches:touches];
+        [self changeScrollViewDisplacementAmount:touches];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     // 手指離開螢幕
-    [self touchesEndedOrCancelledWithTouches:touches];
+    if (self.isTouchPointInMoveView) {
+        self.isTouchPointInMoveView = NO;
+        [self touchesEndedOrCancelledWithTouches:touches];
+    }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     // 當有突發事件發生時 (比如觸碰過程被來電打斷)
-    [self touchesEndedOrCancelledWithTouches:touches];
+    if (self.isTouchPointInMoveView) {
+        self.isTouchPointInMoveView = NO;
+        [self touchesEndedOrCancelledWithTouches:touches];
+    }
 }
 
 #pragma mark *  misc
@@ -61,15 +74,7 @@
 - (void)touchesBeganOrMovedWithTouches:(NSSet *)touches {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-    [self setTooltipVisible:YES animated:YES atTouchPoint:touchPoint];
-
-    CGFloat xOffset1 = CGRectGetWidth(self.frame) - CGRectGetWidth(self.verticalSelectionView.frame);
-    CGFloat xOffset2 = fmax(0, touchPoint.x - (CGRectGetWidth(self.verticalSelectionView.frame) * 0.5));
-    CGFloat xOffset = fmin(xOffset1, xOffset2);
-    CGFloat width = CGRectGetWidth(self.verticalSelectionView.frame);
-    CGFloat height = CGRectGetHeight(self.verticalSelectionView.frame);
-    self.verticalSelectionView.frame = CGRectMake(xOffset, 0, width, height);
-
+    [self tooltipVisible:YES animated:YES atTouchPoint:touchPoint];
     [self showLabelSetText];
 }
 
@@ -93,7 +98,9 @@
 }
 
 - (void)touchesEndedOrCancelledWithTouches:(NSSet *)touches {
-    [self setTooltipVisible:NO animated:YES];
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:self];
+    [self tooltipVisible:NO animated:YES atTouchPoint:touchPoint];
     [self showLabelSetText];
 }
 
@@ -110,24 +117,6 @@
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
         [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 30]];
     }
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 20]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 18]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 30]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 0]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 1]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 60]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 70]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 80]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 54]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 11]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 23]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 43]];
-    //    [self.yValue addObject:[NSString stringWithFormat:@"%d", 56]];
 
     CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
     CGFloat height = CGRectGetHeight(frame) - 80;
@@ -135,6 +124,7 @@
     self.yView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DashLineWidth, height)];
     self.yView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.yView];
+
     self.chartView = [[ShiuChartView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     self.chartView.xValues = self.xValue;
     self.chartView.yValues = self.yValue;
@@ -166,8 +156,15 @@
     [self addSubview:self.verticalSelectionView];
 
     // 初始化資訊 view
-    self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(50, 0, 60, 20)];
+    self.tooltipView = [[ShiuChartTooltipView alloc] initWithFrame:CGRectMake(50, 10, 60, 20)];
     [self addSubview:self.tooltipView];
+
+    // 初始化 moveView
+    self.moveView = [[UIButton alloc] initWithFrame:CGRectMake(50, CGRectGetMaxY(self.chartView.frame), 100, 80)];
+    self.moveView.userInteractionEnabled = NO;
+    self.moveView.backgroundColor = [UIColor yellowColor];
+    [self addSubview:self.moveView];
+
 }
 
 - (void)updateRightDisplacementAmount {
@@ -210,60 +207,48 @@
     [self.scrollView removeFromSuperview];
     [self setupInitValue:self.frame];
 }
+- (CGRect)updateVerticalSelectionViewWith:(CGPoint)touchPoint {
+    CGFloat xOffset1 = CGRectGetWidth(self.frame) - CGRectGetWidth(self.verticalSelectionView.frame);
+    CGFloat xOffset2 = fmax(0, touchPoint.x - (CGRectGetWidth(self.verticalSelectionView.frame) * 0.5));
+    CGFloat xOffset = fmin(xOffset1, xOffset2);
+    CGFloat width = CGRectGetWidth(self.verticalSelectionView.frame);
+    CGFloat height = CGRectGetHeight(self.verticalSelectionView.frame);
+    return CGRectMake(xOffset, 0, width, height);
+}
 
-- (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated atTouchPoint:(CGPoint)touchPoint {
-    _tooltipVisible = tooltipVisible;
+- (CGRect)updatePosition:(UIView *)view with:(CGPoint)touchPoint {
+    CGPoint convertedTouchPoint = touchPoint;
+    CGFloat minChartX = (CGRectGetMinX(self.frame) + ceil(CGRectGetWidth(view.frame) * 0.5));
+    if (convertedTouchPoint.x < minChartX) {
+        convertedTouchPoint.x = minChartX;
+    }
 
-    // 將資訊 view 新增進來
-    [self addSubview:self.tooltipView];
-    // 將兩個 view 都放到畫面最上面
-    [self bringSubviewToFront:self.tooltipView];
+    CGFloat maxChartX = (CGRectGetMinX(self.frame) + CGRectGetWidth(self.frame) - ceil(CGRectGetWidth(view.frame) * 0.5));
+    if (convertedTouchPoint.x > maxChartX) {
+        convertedTouchPoint.x = maxChartX;
+    }
 
-    // 更新資訊view的位置
+    CGFloat x = convertedTouchPoint.x - ceil(CGRectGetWidth(view.frame) * 0.5);
+    CGFloat y = CGRectGetMinY(view.frame);
+    CGFloat width = CGRectGetWidth(view.frame);
+    CGFloat height = CGRectGetHeight(view.frame);
+    return CGRectMake(x, y, width, height);
+}
+
+- (void)tooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated atTouchPoint:(CGPoint)touchPoint {
+    // 更新相關view的位置
+    // verticalSelectionView 紅線
+    // tooltipView 上方數值 view
+    // moveView 下面移動的view
+    self.verticalSelectionView.frame = [self updateVerticalSelectionViewWith:touchPoint];
+    self.tooltipView.frame = [self updatePosition:self.tooltipView with:touchPoint];
+    self.moveView.frame = [self updatePosition:self.moveView with:touchPoint];
+ 
+    // 隱藏效果
     __weak typeof(self) weakSelf = self;
-    void (^updatePosition)() = ^{
-        CGPoint convertedTouchPoint = touchPoint;
-        CGFloat minChartX = (CGRectGetMinX(weakSelf.frame) + ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
-        if (convertedTouchPoint.x < minChartX) {
-            convertedTouchPoint.x = minChartX;
-        }
-
-        CGFloat maxChartX = (CGRectGetMinX(weakSelf.frame) + CGRectGetWidth(weakSelf.frame) - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5));
-        if (convertedTouchPoint.x > maxChartX) {
-            convertedTouchPoint.x = maxChartX;
-        }
-
-        CGFloat x = convertedTouchPoint.x - ceil(CGRectGetWidth(weakSelf.tooltipView.frame) * 0.5);
-        CGFloat y = 10;
-        CGFloat width = CGRectGetWidth(weakSelf.tooltipView.frame);
-        CGFloat height = CGRectGetHeight(weakSelf.tooltipView.frame);
-        weakSelf.tooltipView.frame = CGRectMake(x, y, width, height);
-    };
-
-    if (animated) {
-        if (tooltipVisible) {
-            updatePosition();
-        }
-        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
-             weakSelf.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
-         } completion: ^(BOOL finished) {
-             if (!tooltipVisible) {
-                 updatePosition();
-             }
-         }];
-    }
-    else {
-        updatePosition();
-        self.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
-    }
-}
-
-- (void)setTooltipVisible:(BOOL)tooltipVisible animated:(BOOL)animated {
-    [self setTooltipVisible:tooltipVisible animated:animated atTouchPoint:CGPointZero];
-}
-
-- (void)setTooltipVisible:(BOOL)tooltipVisible {
-    [self setTooltipVisible:tooltipVisible animated:NO];
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{
+         weakSelf.tooltipView.alpha = tooltipVisible ? 1.0 : 0.0;
+     } completion:nil];
 }
 
 - (void)showLabelSetText {
@@ -288,6 +273,7 @@
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self setupInitValue:frame];
+        self.isTouchPointInMoveView = NO;
     }
     return self;
 }
