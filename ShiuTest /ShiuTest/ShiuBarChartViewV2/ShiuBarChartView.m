@@ -175,38 +175,10 @@
 
          }];
     }
-
-    // 判斷 y 軸的 xLabels 是否有資料，有的話就將字串畫出來
-    if (_data.yLabels) {
-        NSUInteger yLabelCount = _data.yLabels.count;
-        CGFloat yLabelWidth = _chartMargin.left - XAxisMarginLeft;
-        CGFloat yLabelHeight = _data.yLabelFontSize;
-
-        CGFloat yLabelSpace = (self.bounds.size.height - _chartMargin.top - _chartMargin.bottom + YAxisMarginTop - (yLabelCount * yLabelHeight)) / (yLabelCount - 1);
-
-        UIFont *font = [UIFont systemFontOfSize:_data.yLabelFontSize]; //设置
-        [_data.yLabels enumerateObjectsUsingBlock: ^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-             CGRect rect = CGRectMake(0, _chartMargin.top - YAxisMarginTop + idx * (yLabelHeight + yLabelSpace), yLabelWidth - YLabelMarginRight, yLabelHeight);
-
-             NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-             style.alignment = NSTextAlignmentRight;
-             [obj drawWithRect:rect options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSForegroundColorAttributeName: _data.yLabelTextColor } context:nil];
-         }];
-    }
-
+    
     // 設定線寬度與預設是灰色顏色
     CGContextSetLineWidth(context, 0.5);
     CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
-
-    // 開始畫 y 軸嚕
-    if (self.isShowY) {
-        // 設定線的起始點
-        CGContextMoveToPoint(context, _chartMargin.left - XAxisMarginLeft - 0.5, _chartMargin.top - YAxisMarginTop);
-        // 設定線的中間點
-        CGContextAddLineToPoint(context, _chartMargin.left - XAxisMarginLeft, self.bounds.size.height - _chartMargin.bottom + 0.5);
-        //直接把所有的點連起来
-        CGContextStrokePath(context);
-    }
 
     // 開始畫 x 軸嚕
     if (self.isShowX) {
