@@ -20,7 +20,7 @@
         self.yLabelFontSize = 16;
         self.xLabelTextColor = [UIColor grayColor];
         self.yLabelTextColor = [UIColor grayColor];
-        self.itemGap = 1;
+        self.itemGap = 20;
         self.yMaxNum = 0;
         [self findMaxNumber:dataSets];
     }

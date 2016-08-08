@@ -50,7 +50,7 @@ typedef enum {
     self.yPoints = [NSMutableArray array];
     self.circleViewArray = [NSMutableArray array];
     self.yValueStrings = [NSMutableArray array];
-    self.yValueRange = @[@"5", @"10", @"15", @"20", @"25", @"30", @"35", @"40", @"50", @"100", @"150", @"200", @"250", @"300"];
+    self.yValueRange = @[@"5", @"10", @"15", @"20", @"25", @"30", @"35", @"40", @"50", @"100", @"150", @"200", @"250", @"300", @"400", @"500", @"600", @"700", @"800", @"900", @"1000"];
 
     // 設定顯示文字大小與相關參數設定
     UIFont *font = [UIFont systemFontOfSize:14];
@@ -100,7 +100,7 @@ typedef enum {
         CGSize size = [xValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
         NSInteger displacementAmount = 0;
         displacementAmount = (index % 2) ? DisplacementAmountDown : DisplacementAmountUp;
-        
+
         UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(calculateXPoint - size.width * 0.5, calculateYPoint + displacementAmount, size.width, size.height)];
         valueLabel.font = [UIFont systemFontOfSize:14];
         valueLabel.backgroundColor = [UIColor clearColor];
@@ -163,15 +163,18 @@ typedef enum {
         }
 
         // 畫橫線
+        // 因為 yPoints 最後一個是ml 所以不需要將線畫出來。
+        // (DashLineWidth / 2) 設定開始畫的座標點
         CGPoint maxXPoint = [[self.xPoints lastObject] CGPointValue];
         CGFloat alilengths[2] = { 5, 3 };
         CGContextSetLineDash(ctx, 0, alilengths, 2);
-        for (NSInteger index = 0; index < self.yPoints.count; index++) {
+        NSInteger count = self.yPoints.count - 1;
+        for (NSInteger index = 0; index < count; index++) {
             NSValue *ypoint = self.yPoints[index];
             CGPoint yPoint = [ypoint CGPointValue];
             CGMutablePathRef path = CGPathCreateMutable();
-            CGPathMoveToPoint(path, nil, yPoint.x, yPoint.y);
-            CGPathAddLineToPoint(path, nil, maxXPoint.x - 5, yPoint.y);
+            CGPathMoveToPoint(path, nil, yPoint.x + (DashLineWidth / 2), yPoint.y);
+            CGPathAddLineToPoint(path, nil, maxXPoint.x, yPoint.y);
             CGContextAddPath(ctx, path);
             CGContextDrawPath(ctx, kCGPathEOFillStroke);
             CGPathRelease(path);
@@ -298,16 +301,16 @@ typedef enum {
     // 假如 yValue 沒有比 1 小就代表還可以繼續相減下去
     // 假設已經比 1 小 就代表已經超過參數範圍 就直接跳出迴圈
     // 根據 yValueStrings.count 就可知道要畫幾個參數
-    [self.yValueStrings addObject:@"ml"];
-    [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", maxYValue]];
     for (int index = 1; index <= 4; index++) {
         NSInteger spacValue = value * index;
         NSInteger yValue = maxYValue - spacValue;
         if (1 > yValue) {
             break;
         }
-        [self.yValueStrings addObject:[NSString stringWithFormat:@"%d", yValue]];
+        [self.yValueStrings addObject:[NSString stringWithFormat:@"%ld", (long)yValue]];
     }
+    [self.yValueStrings addObject:[NSString stringWithFormat:@"%ld", (long)maxYValue]];
+    [self.yValueStrings addObject:@"ml"];
     return self.yValueStrings.count;
 }
 

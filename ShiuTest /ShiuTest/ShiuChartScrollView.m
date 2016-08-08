@@ -115,15 +115,16 @@
     //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
     for (int i = 1; i < 40; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
-        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 30]];
+        [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];
     }
 
     CGFloat width = MAX(CGRectGetWidth([UIScreen mainScreen].bounds), (self.xValue.count * DashLineWidth));
     CGFloat height = CGRectGetHeight(frame) - 80;
-
+    
     self.yView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DashLineWidth, height)];
     self.yView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.yView];
+    [self sendSubviewToBack:self.yView];
 
     self.chartView = [[ShiuChartView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     self.chartView.xValues = self.xValue;
@@ -243,7 +244,7 @@
     self.verticalSelectionView.frame = [self updateVerticalSelectionViewWith:touchPoint];
     self.tooltipView.frame = [self updatePosition:self.tooltipView with:touchPoint];
     self.moveView.frame = [self updatePosition:self.moveView with:touchPoint];
- 
+
     // 隱藏效果
     __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations: ^{

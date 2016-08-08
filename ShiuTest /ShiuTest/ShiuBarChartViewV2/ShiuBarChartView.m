@@ -47,32 +47,59 @@
 #pragma mark - public method
 
 - (void)show {
-    // 總共有幾組資料
-    CGFloat groupCount = [_data.dataSets[0].yValues count];
-    // 一組有幾個 bar
-    CGFloat itemCount = [_data.dataSets count];
 
-    // 開始計算每組bar之間的間隔距離
-    CGFloat groupWidth = (self.bounds.size.width - self.chartMargin.left - self.chartMargin.right + self.data.groupSpace) / groupCount - self.data.groupSpace;
+
+
+    // 位置計算, 假設現在是 i = 9
+    // pageIndex 當前 item 在第 1 個分頁 (從 0 開始計)
+    // itemIndexInPage 當前 item 在這個分頁中的第 1 個
+    // itemAtRow 當前 item 在這個分頁中的第 0 列
+    // itemAtColumn 當前 item 在這個分頁的第 1 行 (從 0 開始計)
+    //
+    // 0 1 2 3   8 9 <- 這邊
+    //
+    // 4 5 6 7
+//    NSInteger pageIndex = i / 8;
+//    NSInteger itemIndexInPage = i % 8;
+//    NSInteger itemAtRow = itemIndexInPage / 4;
+//    NSInteger itemAtColumn = itemIndexInPage % 4;
+//    CGFloat x = (pageIndex * CGRectGetWidth(self.bounds)) + widthGap + (square + widthGap) * itemAtColumn;
+//    CGFloat y = heightGap + (square + heightGap) * itemAtRow;
+
+
+
+    // 位置計算, 假設現在是 i = 6
+    // groupCount 當前 item 在第 1 個分頁 (從 0 開始計)
+    // itemIndexInPage 當前 item 在這個分頁中的第 1 個
+    // itemAtRow 當前 item 在這個分頁中的第 0 列
+    // itemAtColumn 當前 item 在這個分頁的第 1 行 (從 0 開始計)
+    //
+    //  0 1 2  | 3 4 5 |  6  <- 這邊
+
+
+
+    // 一個寵物有幾個資訊
+    CGFloat groupCount = [_data.dataSets[0].yValues count];
+    CGFloat itemCount = [self.data.dataSets count];
+
+    // 開始計算每組的總寬度
+    CGFloat groupWidth = 60;
 
     // 設定每個 bar 的高與寬
-    CGFloat barHeight = self.bounds.size.height - _chartMargin.top - _chartMargin.bottom;
-    CGFloat barWidth = (groupWidth + _data.itemGap) / itemCount - _data.itemGap;
 
-    // 說明
-    // 喵喵一號與喵喵二號兩隻貓的資料，每隻喵有三種資訊可以知道，喝水次數，喝水量，吃藥
-    // _data.dataSets.count 會等於 3（三種資訊）
-    // dataset.yValues.count 會等於 2 （兩隻貓）
-    // 先將一種顏色畫完，再畫下一種顏色
+    CGFloat barHeight = self.bounds.size.height - _chartMargin.top - _chartMargin.bottom;
+    CGFloat barWidth = (groupWidth + self.data.itemGap) / itemCount - self.data.itemGap;
+    CGFloat widthGap = (self.bounds.size.width - (groupWidth * groupCount)) / (groupCount + 1);
 
     // 開始長出來嚕
-    for (NSInteger barTypeIndex = 0; barTypeIndex < _data.dataSets.count; barTypeIndex++) {
+    for (NSInteger barTypeIndex = 0; barTypeIndex < self.data.dataSets.count; barTypeIndex++) {
         // 先取得第一種的 bar
-        ShiuBarChartDataSet *dataset = _data.dataSets[barTypeIndex];
+        ShiuBarChartDataSet *dataset = self.data.dataSets[barTypeIndex];
         // 將第一種類型的 bar 開始畫出來
         for (NSInteger barIndex = 0; barIndex < dataset.yValues.count; barIndex++) {
-            CGFloat barX = _chartMargin.left + (barIndex * (groupWidth + _data.groupSpace)) + (barTypeIndex * (barWidth + _data.itemGap));
-            ShiuBar *bar = [[ShiuBar alloc] initWithFrame:CGRectMake(barX, _chartMargin.top, barWidth, barHeight)];
+            CGFloat barX1 = widthGap + (barIndex * (groupWidth + widthGap)) + (barTypeIndex * (barWidth + self.data.itemGap));
+
+            ShiuBar *bar = [[ShiuBar alloc] initWithFrame:CGRectMake(barX1, self.chartMargin.top, barWidth, barHeight)];
 
             // 取得要顯示的數字
             NSNumber *yValue = dataset.yValues[barIndex];
@@ -99,9 +126,9 @@
         }
     }
     // 設定每個bar 顏色所代表的意思
-    if (self.data.isGrouped) {
-        [self setupLegendView];
-    }
+//    if (self.data.isGrouped) {
+//        [self setupLegendView];
+//    }
 }
 
 - (void)setupLegendView {
@@ -136,11 +163,11 @@
     // 判斷 Ｘ 軸的 xLabels 是否有資料，有的話就將字串畫出來
     if (_data.xLabels) {
         NSUInteger xLabelCount = _data.xLabels.count;
-        CGFloat xLabelWidth = (self.bounds.size.width - _chartMargin.left - _chartMargin.right + _data.groupSpace) / xLabelCount - _data.groupSpace;
+        CGFloat xLabelWidth = (self.bounds.size.width - _chartMargin.left - _chartMargin.right) / xLabelCount;
         CGFloat xLabelHeight = _chartMargin.bottom - XLabelMarginTop;
         UIFont *font = [UIFont systemFontOfSize:_data.xLabelFontSize]; //设置
         [_data.xLabels enumerateObjectsUsingBlock: ^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-             CGRect rect = CGRectMake(_chartMargin.left + idx * (xLabelWidth + _data.groupSpace), self.bounds.size.height - _chartMargin.bottom + XLabelMarginTop, xLabelWidth, xLabelHeight);
+             CGRect rect = CGRectMake(_chartMargin.left + idx * (xLabelWidth), self.bounds.size.height - _chartMargin.bottom + XLabelMarginTop, xLabelWidth, xLabelHeight);
              NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
              style.lineBreakMode = NSLineBreakByWordWrapping;
              style.alignment = NSTextAlignmentCenter;
