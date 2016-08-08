@@ -11,8 +11,8 @@
 
 #define XLabelMarginTop 5
 #define YLabelMarginRight 5
-#define XAxisMarginLeft 10
-#define XAxisMarginRight 10
+#define XAxisMarginLeft 0
+#define XAxisMarginRight 0
 #define YAxisMarginTop 10
 #define LegendTextSize 10
 
@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong) NSMutableArray <ShiuBar *> *bars;
 @property (nonatomic, strong) ShiuLegendView *legendView;
+@property (nonatomic, strong) NSMutableArray *stringPointX;
 
 @end
 
@@ -42,6 +43,7 @@
     self.backgroundColor = [UIColor whiteColor];
     self.clipsToBounds = YES;
     self.bars = [NSMutableArray array];
+    self.stringPointX = [NSMutableArray array];
 }
 
 #pragma mark - public method
@@ -83,7 +85,7 @@
     CGFloat itemCount = [self.data.dataSets count];
 
     // 開始計算每組的總寬度
-    CGFloat groupWidth = 60;
+    CGFloat groupWidth = 40;
 
     // 設定每個 bar 的高與寬
 
@@ -98,9 +100,11 @@
         // 將第一種類型的 bar 開始畫出來
         for (NSInteger barIndex = 0; barIndex < dataset.yValues.count; barIndex++) {
             CGFloat barX1 = widthGap + (barIndex * (groupWidth + widthGap)) + (barTypeIndex * (barWidth + self.data.itemGap));
-
             ShiuBar *bar = [[ShiuBar alloc] initWithFrame:CGRectMake(barX1, self.chartMargin.top, barWidth, barHeight)];
-
+            if (barTypeIndex == 0) {
+                [self.stringPointX addObject:bar];
+                NSLog(@"bar  = %@", NSStringFromCGRect(bar.frame));
+            }
             // 取得要顯示的數字
             NSNumber *yValue = dataset.yValues[barIndex];
             // 使用 isnan 判斷是否為數字，當不是數字時直接帶0。
@@ -161,21 +165,31 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     // 判斷 Ｘ 軸的 xLabels 是否有資料，有的話就將字串畫出來
-    if (_data.xLabels) {
-        NSUInteger xLabelCount = _data.xLabels.count;
-        CGFloat xLabelWidth = (self.bounds.size.width - _chartMargin.left - _chartMargin.right) / xLabelCount;
+    if (self.data.xLabels) {
         CGFloat xLabelHeight = _chartMargin.bottom - XLabelMarginTop;
-        UIFont *font = [UIFont systemFontOfSize:_data.xLabelFontSize]; //设置
-        [_data.xLabels enumerateObjectsUsingBlock: ^(NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-             CGRect rect = CGRectMake(_chartMargin.left + idx * (xLabelWidth), self.bounds.size.height - _chartMargin.bottom + XLabelMarginTop, xLabelWidth, xLabelHeight);
-             NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-             style.lineBreakMode = NSLineBreakByWordWrapping;
-             style.alignment = NSTextAlignmentCenter;
-             [obj drawWithRect:rect options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSForegroundColorAttributeName:_data.xLabelTextColor } context:nil];
+        // 設定顯示文字大小與相關參數設定
+        UIFont *font = [UIFont systemFontOfSize:self.data.xLabelFontSize];
+        UIColor *stringColor = [UIColor blackColor];
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.alignment = NSTextAlignmentCenter;
+        NSDictionary *textStyleDictionary = @{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSForegroundColorAttributeName:stringColor, NSStrokeColorAttributeName:stringColor };
+
+        [self.data.xLabels enumerateObjectsUsingBlock: ^(NSString *_Nonnull obj, NSUInteger index, BOOL *_Nonnull stop) {
+             CGSize size = [obj boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:textStyleDictionary context:nil].size;
+             ShiuBar *bar = self.stringPointX[index];
+             CGRect stringFrame = CGRectMake(0, self.bounds.size.height - _chartMargin.bottom + XLabelMarginTop, size.width, xLabelHeight);
+             UILabel *valueLabel = [[UILabel alloc] initWithFrame:stringFrame];
+             CGPoint newPoint = valueLabel.center;
+             newPoint.x = CGRectGetMaxX(bar.frame);
+             valueLabel.center = newPoint;
+             valueLabel.font = [UIFont systemFontOfSize:14];
+             valueLabel.textAlignment = NSTextAlignmentCenter;
+             valueLabel.text = obj;
+             [self addSubview:valueLabel];
 
          }];
     }
-    
+
     // 設定線寬度與預設是灰色顏色
     CGContextSetLineWidth(context, 0.5);
     CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
