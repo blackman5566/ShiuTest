@@ -35,7 +35,7 @@ typedef void (^DrawAtPointBlock)(CGFloat cX, CGFloat cY, CGSize size, NSString *
 @property (strong, nonatomic) UIColor *chartColor;
 
 /**
-   @abstract 設定 折線圖的顏色
+   @abstract 負責儲存每一點的相關資料
  */
 @property (strong, nonatomic) NSMutableArray *circleViewArray;
 

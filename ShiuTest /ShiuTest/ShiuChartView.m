@@ -25,16 +25,16 @@ typedef enum {
 
 @interface ShiuChartView ()
 
-@property (strong, nonatomic) NSArray *yValueRange;
-@property (strong, nonatomic) NSMutableArray *xPoints;
-@property (strong, nonatomic) NSMutableArray *yPoints;
-@property (strong, nonatomic) NSMutableArray *yValueStrings;
-@property (strong, nonatomic) NSDictionary *textStyleDictionary;
+@property (nonatomic, strong) NSArray *yValueRange;
+@property (nonatomic, strong) NSMutableArray *xPoints;
+@property (nonatomic, strong) NSMutableArray *yPoints;
+@property (nonatomic, strong) NSMutableArray *yValueStrings;
+@property (nonatomic, strong) NSDictionary *textStyleDictionary;
 
-@property (assign, nonatomic) CGFloat leftLineMargin;
-@property (assign, nonatomic) NSInteger maxYValue;
-@property (assign, nonatomic) NSInteger pointCount;
-@property (assign, nonatomic) CGFloat scale;
+@property (nonatomic, assign) CGFloat leftLineMargin;
+@property (nonatomic, assign) NSInteger maxYValue;
+@property (nonatomic, assign) NSInteger pointCount;
+@property (nonatomic, assign) CGFloat scale;
 
 @end
 
@@ -100,6 +100,7 @@ typedef enum {
         CGSize size = [xValue boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.textStyleDictionary context:nil].size;
         NSInteger displacementAmount = 0;
         displacementAmount = (index % 2) ? DisplacementAmountDown : DisplacementAmountUp;
+        
         UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(calculateXPoint - size.width * 0.5, calculateYPoint + displacementAmount, size.width, size.height)];
         valueLabel.font = [UIFont systemFontOfSize:14];
         valueLabel.backgroundColor = [UIColor clearColor];

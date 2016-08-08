@@ -14,7 +14,7 @@
 
 @interface ShiuChartScrollView ()
 
-@property (strong, nonatomic) ShiuVerticalSelectionView *verticalSelectionView;
+@property (nonatomic, strong) ShiuVerticalSelectionView *verticalSelectionView;
 
 @property (nonatomic, strong) ShiuChartTooltipView *tooltipView;
 @property (nonatomic, strong) ShiuChartView *chartView;

@@ -44,7 +44,12 @@ typedef void (^CircleClickBlock)(id);
 /**
    @abstract 記錄 value 。
  */
-@property (nonatomic, assign) NSString *value;
+@property (nonatomic, strong) NSString *value;
+
+/**
+ @abstract 記錄 日期 value 。
+ */
+@property (nonatomic, strong) NSString *dateValue;
 
 @end
 
