@@ -10,9 +10,10 @@
 #import "ShiuChartScrollView.h"
 #import "ShiuBarChartScrollView.h"
 
-@interface ViewController ()
+@interface ViewController () <ShiuBarChartScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *barView;
+
 @property (nonatomic, strong) ShiuBarChartScrollView *shiuBarChartScrollView;
 @property (nonatomic, strong) ShiuChartScrollView *shiuChartScrollView;
 
@@ -43,7 +44,12 @@
 
 - (void)setupShiuBarChartView {
     self.shiuBarChartScrollView = [[ShiuBarChartScrollView alloc] initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, 200)];
+    self.shiuBarChartScrollView.delegate = self;
     [self.view addSubview:self.shiuBarChartScrollView];
+}
+
+- (void)scrollViewDidScroll:(NSInteger)pageIndex {
+
 }
 
 @end

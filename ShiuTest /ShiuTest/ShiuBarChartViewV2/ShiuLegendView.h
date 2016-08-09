@@ -18,17 +18,9 @@ typedef NS_ENUM (NSInteger, LegendAlignment) {
 @interface ShiuLegendView : UIView
 
 @property (nonatomic, assign) LegendAlignment alignment;
-@property (nonatomic, strong) NSArray <ShiuLegendViewData *> *data;
-
-- (instancetype)initWithData:(NSArray <ShiuLegendViewData *> *)data;
+@property (nonatomic, strong) NSArray <ShiuLegendViewData *> *datas;
 
 @end
-
-
-/**
- @abstract  legendView
- @discussion 實際上也就是這個 app 中負責動態長出柱狀圖的 View。
- */
 
 @interface ShiuLegendViewData : NSObject
 

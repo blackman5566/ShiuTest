@@ -11,19 +11,20 @@
 #import "ShiuBarChartData.h"
 #import "ShiuBarChartView.h"
 
-@interface ShiuBarChartScrollView ()
+@interface ShiuBarChartScrollView () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) ShiuBarChartView *shiuBarChartView;
+@property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 @end
 
 @implementation ShiuBarChartScrollView
 
 - (void)setupInitValue:(CGRect)frame {
-    // 產生參數 有多少數量就代表會產生幾筆資料
+    // 產生假資料 有多少數量就代表會產生幾筆資料
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
-    NSMutableArray *yVals3 = [[NSMutableArray alloc] init];
     double mult = 5 * 1000.f;
     for (int i = 0; i < 3; i++) {
         double val = (double)(arc4random_uniform(mult) + 3.0);
@@ -31,51 +32,44 @@
         val = (double)(arc4random_uniform(mult) + 3.0);
         [yVals2 addObject:@(val)];
         val = (double)(arc4random_uniform(mult) + 3.0);
-        [yVals3 addObject:@(val)];
-
     }
 
-    // 設定 Bar 有幾種顏色與代表的意思，像以下就設定三種 “次數” “喝水” “吃藥”
+    // ShiuBarChartDataSet 設定 Bar 有幾種顏色與代表的意思，像以下就設定三種 “次數” “喝水”
+    // itemGap 設定每一個 bar 之間的距離，面前設為 0
     ShiuBarChartDataSet *barType1 = [[ShiuBarChartDataSet alloc] initWithYValues:yVals1 label:@"次數"];
     [barType1 setBarColor:[UIColor colorWithRed:77.0 / 255.0 green:186.0 / 255.0 blue:122.0 / 255.0 alpha:1.0f]];
     ShiuBarChartDataSet *barType2 = [[ShiuBarChartDataSet alloc] initWithYValues:yVals2 label:@"喝水量"];
     [barType2 setBarColor:[UIColor colorWithRed:245.0 / 255.0 green:94.0 / 255.0 blue:78.0 / 255.0 alpha:1.0f]];
-    ShiuBarChartDataSet *barType3 = [[ShiuBarChartDataSet alloc] initWithYValues:yVals2 label:@"吃藥"];
-    [barType3 setBarColor:[UIColor colorWithRed:100.0 / 255.0 green:94.0 / 255.0 blue:78.0 / 255.0 alpha:1.0f]];
-    NSArray *dataSets = @[barType1, barType2];
-
-    // 設定每一個 Bar 的資料
-    ShiuBarChartData *data = [[ShiuBarChartData alloc] initWithDataSets:dataSets];
-    // 設定 x 軸要顯示的文字
+    ShiuBarChartData *data = [[ShiuBarChartData alloc] initWithDataSets:@[barType1, barType2]];
     data.xLabels = @[@"貓貓一號", @"貓貓二號", @"貓貓三號"];
-    // 設定群組內每一個bar之間的 Gap
-    data.itemGap = 0;
-    data.groupSpace = 40;
+    data.barGap = 0;
 
-    // 初始化 shiuBarChartViewV2
-    self.shiuBarChartView = [[ShiuBarChartView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-    // 設定 Bar View 與四個邊界的距離
+    // 初始化 shiuBarChartView
+    // chartMargin 設定四個邊界的距離
+    // isAnimated 設定是否要動畫效果
+    // isShowX 設定是否要顯示 X 軸資訊
+    // isShowNumber 設定是否要顯示 bar 上的數字
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 10, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10)];
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.delegate = self;
+    self.scrollView.contentSize = CGSizeMake(frame.size.width * 2, CGRectGetHeight(frame) - 10);
+
+    self.shiuBarChartView = [[ShiuBarChartView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, CGRectGetHeight(self.scrollView.frame))];
     self.shiuBarChartView.chartMargin = UIEdgeInsetsMake(30, 15, 30, 15);
-    // 設定 資料
     self.shiuBarChartView.data = data;
-    // 設定是否要動畫效果
     self.shiuBarChartView.isAnimated = YES;
-    // 設定是否要顯示x軸資訊
     self.shiuBarChartView.isShowX = YES;
-    //設定是否要顯示y軸資訊
-    self.shiuBarChartView.isShowY = NO;
-    // 設定是否要顯示每個bar 上的數字
     self.shiuBarChartView.isShowNumber = YES;
-    // 設定 種類的右上角view的顯示方式，直式的或是橫式的。
-    self.shiuBarChartView.legendView.alignment = LegendAlignmentHorizontal;
-    self.contentSize = CGSizeMake(frame.size.width * 2, frame.size.height);
-    [self addSubview:self.shiuBarChartView];
-    // 顯示 view
-    [self.shiuBarChartView show];
-    // 根據計算取得 legendCenter 讓顯示在右上角
-    CGPoint legendCenter = CGPointMake([UIScreen mainScreen].bounds.size.width - self.shiuBarChartView.legendView.bounds.size.width / 2, self.shiuBarChartView.legendView.bounds.size.height / 2);
-    self.shiuBarChartView.legendView.center = legendCenter;
+    [self.scrollView addSubview:self.shiuBarChartView];
+    [self addSubview:self.scrollView];
 
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), 10)];
+    self.pageControl.numberOfPages = 2;
+    self.pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    [self addSubview:self.pageControl];
+    [self.shiuBarChartView show];
 }
 
 #pragma mark - life cycle
@@ -83,6 +77,7 @@
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self setupInitValue:frame];
+        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -91,6 +86,15 @@
 
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //scrollView 轉換 page
+    NSInteger currentPage = ((scrollView.contentOffset.x - CGRectGetWidth(self.frame) / 2) / CGRectGetWidth(self.frame)) + 1;
+    self.pageControl.currentPage = currentPage;
+    [self.delegate scrollViewDidScroll:currentPage];
 }
 
 @end

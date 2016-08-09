@@ -42,13 +42,6 @@
 @property (nonatomic, assign) BOOL isShowNumber;
 
 /**
-   @abstract  isShowY
-   @discussion 控制是否顯示 Y 軸。
- */
-
-@property (nonatomic, assign) BOOL isShowY;
-
-/**
    @abstract  isShowX
    @discussion 控制是否顯示 Ｘ 軸。
  */

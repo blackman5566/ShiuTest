@@ -15,12 +15,11 @@
     self = [super init];
     if (self) {
         self.dataSets = dataSets;
-        self.groupSpace = 20;
         self.xLabelFontSize = 16;
         self.yLabelFontSize = 16;
         self.xLabelTextColor = [UIColor grayColor];
         self.yLabelTextColor = [UIColor grayColor];
-        self.itemGap = 20;
+        self.barGap = 0;
         self.yMaxNum = 0;
         [self findMaxNumber:dataSets];
     }
@@ -28,7 +27,7 @@
 }
 
 - (BOOL)isGrouped {
-    return _dataSets.count > 1;
+    return self.dataSets.count > 1;
 }
 
 - (void)findMaxNumber:(NSArray <ShiuBarChartDataSet *> *)dataSets {

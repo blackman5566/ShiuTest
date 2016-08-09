@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ShiuBarChartScrollView : UIScrollView
+@protocol ShiuBarChartScrollViewDelegate;
+
+@interface ShiuBarChartScrollView : UIView
+
+@property (nonatomic, weak) id <ShiuBarChartScrollViewDelegate> delegate;
 
 @end
+
+@protocol ShiuBarChartScrollViewDelegate <NSObject>
+- (void)scrollViewDidScroll:(NSInteger)pageIndex;
+
+@end
+

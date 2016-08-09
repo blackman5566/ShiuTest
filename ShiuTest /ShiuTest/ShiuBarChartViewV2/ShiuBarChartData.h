@@ -16,8 +16,7 @@
 @property (nonatomic, strong) NSArray <ShiuBarChartDataSet *> *dataSets;
 @property (nonatomic, assign) CGFloat yMaxNum;
 
-@property (nonatomic, assign) CGFloat groupSpace;
-@property (nonatomic, assign) CGFloat itemGap;
+@property (nonatomic, assign) CGFloat barGap;
 @property (nonatomic, assign, readonly) BOOL isGrouped;
 
 @property (nonatomic, strong) UIColor *xLabelTextColor;
