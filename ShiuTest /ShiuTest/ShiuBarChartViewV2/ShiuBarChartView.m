@@ -16,7 +16,6 @@
 @interface ShiuBarChartView ()
 
 @property (nonatomic, strong) NSMutableArray <ShiuBar *> *bars;
-@property (nonatomic, strong) ShiuLegendView *legendView;
 @property (nonatomic, strong) NSMutableArray *stringPointX;
 
 @end
@@ -25,7 +24,20 @@
 
 #pragma mark - public method
 
-- (void)show {
+- (void)showBar {
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self setupShiuBar];
+    [self setupPetName];
+    for (ShiuBar *bar in self.bars) {
+        [bar show];
+    }
+}
+
+#pragma mark - private instance method
+
+#pragma mark * init
+
+- (void)setupShiuBar {
     // petCount 寵物的數量
     // itemCount barType 的數量
     // groupWidth 每一個寵物所有 bar 的總寬度
@@ -66,85 +78,17 @@
             [self isStringPointXWithShiuBar:bar barTypeIndex:barTypeIndex];
         }
     }
-    [self showLegendView];
 }
 
-#pragma mark - private instance method
-
-#pragma mark * init
-
-- (void)setupInitValue {
-    self.chartMargin = UIEdgeInsetsMake(30, 30, 30, 30);
-    self.isShowX = YES;
-    self.backgroundColor = [UIColor whiteColor];
-    self.clipsToBounds = YES;
-    self.bars = [NSMutableArray array];
-    self.stringPointX = [NSMutableArray array];
-}
-
-- (void)setupLegendView {
-    // 開始尋遍每一個物件
-    NSMutableArray *datas = [NSMutableArray array];
-    [self.data.dataSets enumerateObjectsUsingBlock: ^(ShiuBarChartDataSet *_Nonnull dataInfo, NSUInteger index, BOOL *_Nonnull stop) {
-         ShiuLegendViewData *data = [ShiuLegendViewData new];
-         data.color = dataInfo.barColor;
-         data.label = dataInfo.label;
-         [datas addObject:data];
-     }];
-
-    // 根據計算取得 legendCenter 讓顯示在右上角
-    self.legendView.alignment = LegendAlignmentHorizontal;
-    self.legendView.datas = datas;
-    CGPoint legendCenter = CGPointMake([UIScreen mainScreen].bounds.size.width - self.legendView.bounds.size.width / 2, self.legendView.bounds.size.height / 2);
-    self.legendView.center = legendCenter;
-}
-
-- (ShiuLegendView *)legendView {
-    if (!_legendView) {
-        _legendView = [[ShiuLegendView alloc] init];
-        [self addSubview:_legendView];
-    }
-    return _legendView;
-}
-
-#pragma mark * misc
-
-- (void)isStringPointXWithShiuBar:(ShiuBar *)bar barTypeIndex:(NSInteger)barTypeIndex {
-    if (barTypeIndex == 0) {
-        [self.stringPointX addObject:bar];
-    }
-}
-
-- (void)isShowLegendView:(ShiuBar *)bar value:(NSNumber *)yValue barTypeIndex:(NSInteger)barTypeIndex {
-    if (self.isShowNumber) {
-        bar.barText = yValue.stringValue;
-        if (barTypeIndex) {
-            bar.barText = [NSString stringWithFormat:@"%@ml", yValue.stringValue];
-        }
-    }
-}
-- (void)showLegendView {
-    // 設定每個bar 顏色所代表的意思
-    if (self.data.isGrouped) {
-        //[self setupLegendView];
-    }
-}
-
-#pragma mark - override
-
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-
-    // 判斷 xLabels 是否有參數，有的話就將顯示出來
+- (void)setupPetName {
+     // 初始化 Ｘ軸 文字
     if (self.data.xLabels) {
-        //設定要顯示的 textStyle
         UIFont *font = [UIFont systemFontOfSize:self.data.xLabelFontSize];
         UIColor *stringColor = [UIColor blackColor];
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.alignment = NSTextAlignmentCenter;
         NSDictionary *textStyleDictionary = @{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSForegroundColorAttributeName:stringColor, NSStrokeColorAttributeName:stringColor };
-
-        // 開始尋遍每一個物件
+        
         [self.data.xLabels enumerateObjectsUsingBlock: ^(NSString *_Nonnull petName, NSUInteger index, BOOL *_Nonnull stop) {
              // size 取得當前 petName 的文字大小
              // xLabelHeight 計算每一個 Label 高度
@@ -166,7 +110,39 @@
              [self addSubview:valueLabel];
          }];
     }
+}
 
+- (void)setupInitValue {
+    self.chartMargin = UIEdgeInsetsMake(30, 30, 30, 30);
+    self.isShowX = YES;
+    self.backgroundColor = [UIColor whiteColor];
+    self.clipsToBounds = YES;
+    self.bars = [NSMutableArray array];
+    self.stringPointX = [NSMutableArray array];
+}
+
+#pragma mark * misc
+
+- (void)isStringPointXWithShiuBar:(ShiuBar *)bar barTypeIndex:(NSInteger)barTypeIndex {
+    if (barTypeIndex == 0) {
+        [self.stringPointX addObject:bar];
+    }
+}
+
+- (void)isShowLegendView:(ShiuBar *)bar value:(NSNumber *)yValue barTypeIndex:(NSInteger)barTypeIndex {
+    if (self.isShowNumber) {
+        NSString *string = [NSString stringWithFormat:@"%@次", yValue.stringValue];
+        if (barTypeIndex) {
+            string = [NSString stringWithFormat:@"%@ml", yValue.stringValue];
+        }
+        bar.barText = string;
+    }
+}
+
+#pragma mark - override
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
     // 設定線寬度與預設是灰色顏色
     // 開始畫 X 軸嚕
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -177,7 +153,6 @@
         CGContextAddLineToPoint(context, self.bounds.size.width - self.chartMargin.right + XAxisMarginRight, self.bounds.size.height - self.chartMargin.bottom + 0.5);
         CGContextStrokePath(context);
     }
-
 }
 
 #pragma mark - life cycle

@@ -13,15 +13,45 @@
 
 @interface ShiuBarChartScrollView () <UIScrollViewDelegate>
 
-@property (nonatomic, strong) ShiuBarChartView *shiuBarChartView;
 @property (nonatomic, strong) UIPageControl *pageControl;
 @property (nonatomic, strong) UIScrollView *scrollView;
+
+@property (nonatomic, assign, readonly) NSInteger totalPage;
+@property (nonatomic, assign) NSInteger originalIndex;
 
 @end
 
 @implementation ShiuBarChartScrollView
 
-- (void)setupInitValue:(CGRect)frame {
+#pragma mark - private instance method
+
+#pragma mark * init
+
+- (void)setupInitValue {
+    self.backgroundColor = [UIColor whiteColor];
+    self.originalIndex = 0;
+}
+
+- (void)setupPageControl:(CGRect)frame {
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), 10)];
+    self.pageControl.numberOfPages = self.totalPage;
+    self.pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    self.pageControl.hidden = (self.totalPage <= 1);
+    [self addSubview:self.pageControl];
+}
+
+- (void)setupScrollView:(CGRect)frame {
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 10, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10)];
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.delegate = self;
+    self.scrollView.bounces = NO;
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.contentSize = CGSizeMake(frame.size.width * 2, CGRectGetHeight(frame) - 10);
+    [self addSubview:self.scrollView];
+}
+
+- (void)setupShiuBarChartView:(CGRect)frame {
     // 產生假資料 有多少數量就代表會產生幾筆資料
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
@@ -33,6 +63,7 @@
         [yVals2 addObject:@(val)];
         val = (double)(arc4random_uniform(mult) + 3.0);
     }
+
 
     // ShiuBarChartDataSet 設定 Bar 有幾種顏色與代表的意思，像以下就設定三種 “次數” “喝水”
     // itemGap 設定每一個 bar 之間的距離，面前設為 0
@@ -49,35 +80,42 @@
     // isAnimated 設定是否要動畫效果
     // isShowX 設定是否要顯示 X 軸資訊
     // isShowNumber 設定是否要顯示 bar 上的數字
+    for (NSInteger indexPage = 0; indexPage < 2; indexPage++) {
+        ShiuBarChartView *shiuBarChartView = [[ShiuBarChartView alloc] initWithFrame:CGRectMake(CGRectGetWidth(frame) * indexPage, 0, CGRectGetWidth(frame), CGRectGetHeight(self.scrollView.frame))];
+        shiuBarChartView.chartMargin = UIEdgeInsetsMake(30, 15, 30, 15);
+        shiuBarChartView.data = data;
+        shiuBarChartView.isAnimated = YES;
+        shiuBarChartView.isShowX = YES;
+        shiuBarChartView.isShowNumber = YES;
+        [self.scrollView addSubview:shiuBarChartView];
+    }
+    [self showBarWithPageIndex:0];
+}
 
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 10, CGRectGetWidth(frame), CGRectGetHeight(frame) - 10)];
-    self.scrollView.pagingEnabled = YES;
-    self.scrollView.delegate = self;
-    self.scrollView.contentSize = CGSizeMake(frame.size.width * 2, CGRectGetHeight(frame) - 10);
+- (void)showBarWithPageIndex:(NSInteger)pageIndex {
+    ShiuBarChartView *shiuBarChartView = self.scrollView.subviews[pageIndex];
+    [shiuBarChartView showBar];
+}
 
-    self.shiuBarChartView = [[ShiuBarChartView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, CGRectGetHeight(self.scrollView.frame))];
-    self.shiuBarChartView.chartMargin = UIEdgeInsetsMake(30, 15, 30, 15);
-    self.shiuBarChartView.data = data;
-    self.shiuBarChartView.isAnimated = YES;
-    self.shiuBarChartView.isShowX = YES;
-    self.shiuBarChartView.isShowNumber = YES;
-    [self.scrollView addSubview:self.shiuBarChartView];
-    [self addSubview:self.scrollView];
+- (void)removePreviousView:(NSInteger)pageIndex {
+    ShiuBarChartView *shiuBarChartView = self.scrollView.subviews[pageIndex];
+    [shiuBarChartView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
 
-    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), 10)];
-    self.pageControl.numberOfPages = 2;
-    self.pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
-    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    [self addSubview:self.pageControl];
-    [self.shiuBarChartView show];
+#pragma mark - setter / getter
+
+- (NSInteger)totalPage {
+    return ceil(2);
 }
 
 #pragma mark - life cycle
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self setupInitValue:frame];
-        self.backgroundColor = [UIColor whiteColor];
+        [self setupInitValue];
+        [self setupPageControl:frame];
+        [self setupScrollView:frame];
+        [self setupShiuBarChartView:frame];
     }
     return self;
 }
@@ -90,11 +128,15 @@
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //scrollView 轉換 page
-    NSInteger currentPage = ((scrollView.contentOffset.x - CGRectGetWidth(self.frame) / 2) / CGRectGetWidth(self.frame)) + 1;
-    self.pageControl.currentPage = currentPage;
-    [self.delegate scrollViewDidScroll:currentPage];
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSInteger currentIndex = ((scrollView.contentOffset.x - CGRectGetWidth(self.frame) / 2) / CGRectGetWidth(self.frame)) + 1;
+    if (currentIndex != self.originalIndex) {
+        [self removePreviousView:self.originalIndex];
+        [self showBarWithPageIndex:currentIndex];
+        [self.delegate scrollViewDidScroll:currentIndex];
+        self.pageControl.currentPage = currentIndex;
+        self.originalIndex = currentIndex;
+    }
 }
 
 @end

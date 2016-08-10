@@ -10,13 +10,23 @@
 
 @implementation ShiuBarChartDataSet
 
-- (instancetype)initWithYValues:(NSArray <NSNumber *> *)yValues label:(NSString *)label {
+#pragma mark - private instance method
+
+#pragma mark * init
+
+- (void)setupInitValue:(NSArray <NSNumber *> *)yValues label:(NSString *)typeString {
+    self.yValues = yValues;
+    self.typeString = typeString;
+    self.barColor = [UIColor blueColor];
+    self.barbackGroudColor = nil;
+}
+
+#pragma mark - life cycle
+
+- (instancetype)initWithYValues:(NSArray <NSNumber *> *)yValues label:(NSString *)typeString {
     self = [super init];
     if (self) {
-        self.yValues = yValues;
-        self.label = label;
-        self.barColor = [UIColor blueColor];
-        self.barbackGroudColor = nil;
+        [self setupInitValue:yValues label:typeString];
     }
     return self;
 }

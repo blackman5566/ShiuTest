@@ -25,7 +25,6 @@
 		2EE43A351D5041FC00CF3A0F /* ShiuBarChartData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A2D1D5041FC00CF3A0F /* ShiuBarChartData.m */; };
 		2EE43A361D5041FC00CF3A0F /* ShiuBarChartDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A2F1D5041FC00CF3A0F /* ShiuBarChartDataSet.m */; };
 		2EE43A371D5041FC00CF3A0F /* ShiuBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A311D5041FC00CF3A0F /* ShiuBarChartView.m */; };
-		2EE43A381D5041FC00CF3A0F /* ShiuLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE43A331D5041FC00CF3A0F /* ShiuLegendView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,8 +62,6 @@
 		2EE43A2F1D5041FC00CF3A0F /* ShiuBarChartDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuBarChartDataSet.m; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartDataSet.m; sourceTree = "<group>"; };
 		2EE43A301D5041FC00CF3A0F /* ShiuBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuBarChartView.h; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartView.h; sourceTree = "<group>"; };
 		2EE43A311D5041FC00CF3A0F /* ShiuBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuBarChartView.m; path = ShiuTest/ShiuBarChartViewV2/ShiuBarChartView.m; sourceTree = "<group>"; };
-		2EE43A321D5041FC00CF3A0F /* ShiuLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShiuLegendView.h; path = ShiuTest/ShiuBarChartViewV2/ShiuLegendView.h; sourceTree = "<group>"; };
-		2EE43A331D5041FC00CF3A0F /* ShiuLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShiuLegendView.m; path = ShiuTest/ShiuBarChartViewV2/ShiuLegendView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,8 +159,6 @@
 				2EE43A2D1D5041FC00CF3A0F /* ShiuBarChartData.m */,
 				2EE43A2E1D5041FC00CF3A0F /* ShiuBarChartDataSet.h */,
 				2EE43A2F1D5041FC00CF3A0F /* ShiuBarChartDataSet.m */,
-				2EE43A321D5041FC00CF3A0F /* ShiuLegendView.h */,
-				2EE43A331D5041FC00CF3A0F /* ShiuLegendView.m */,
 			);
 			name = ShiuBarChartView;
 			path = ..;
@@ -253,7 +248,6 @@
 				2EE43A291D501F1000CF3A0F /* ShiuVerticalSelectionView.m in Sources */,
 				2EE43A1B1D49E06400CF3A0F /* ShiuCircleView.m in Sources */,
 				2E45D3081D5863FD008E3F29 /* ShiuBarChartScrollView.m in Sources */,
-				2EE43A381D5041FC00CF3A0F /* ShiuLegendView.m in Sources */,
 				2E8AB8681D3C880D002E3F4A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

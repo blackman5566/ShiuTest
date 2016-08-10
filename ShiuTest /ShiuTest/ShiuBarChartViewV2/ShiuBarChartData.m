@@ -11,26 +11,21 @@
 
 @implementation ShiuBarChartData
 
-- (instancetype)initWithDataSets:(NSArray <ShiuBarChartDataSet *> *)dataSets {
-    self = [super init];
-    if (self) {
-        self.dataSets = dataSets;
-        self.xLabelFontSize = 16;
-        self.yLabelFontSize = 16;
-        self.xLabelTextColor = [UIColor grayColor];
-        self.yLabelTextColor = [UIColor grayColor];
-        self.barGap = 0;
-        self.yMaxNum = 0;
-        [self findMaxNumber:dataSets];
-    }
-    return self;
+#pragma mark - private instance method
+
+#pragma mark * init
+
+- (void)setupInitValue:(NSArray <ShiuBarChartDataSet *> *)dataSets {
+    self.dataSets = dataSets;
+    self.xLabelFontSize = 16;
+    self.yLabelFontSize = 16;
+    self.xLabelTextColor = [UIColor grayColor];
+    self.yLabelTextColor = [UIColor grayColor];
+    self.barGap = 0;
+    self.yMaxNum = 0;
 }
 
-- (BOOL)isGrouped {
-    return self.dataSets.count > 1;
-}
-
-- (void)findMaxNumber:(NSArray <ShiuBarChartDataSet *> *)dataSets {
+- (void)setupMaxNumber:(NSArray <ShiuBarChartDataSet *> *)dataSets {
     for (ShiuBarChartDataSet *dataset in dataSets) {
         for (NSNumber *yValue in dataset.yValues) {
             if (yValue.floatValue > self.yMaxNum) {
@@ -38,6 +33,23 @@
             }
         }
     }
+}
+
+#pragma mark - life cycle
+
+- (instancetype)initWithDataSets:(NSArray <ShiuBarChartDataSet *> *)dataSets {
+    self = [super init];
+    if (self) {
+        [self setupInitValue:dataSets];
+        [self setupMaxNumber:dataSets];
+    }
+    return self;
+}
+
+#pragma mark - setter / getter
+
+- (BOOL)isGrouped {
+    return self.dataSets.count > 1;
 }
 
 @end

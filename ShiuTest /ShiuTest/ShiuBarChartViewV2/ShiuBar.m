@@ -41,8 +41,7 @@
     return self;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)show {
     if (_textLayer) {
         _textLayer.position = CGPointMake(self.bounds.size.width / 2, _backgroundLayer ? -BarTextFont : self.bounds.size.height * (1 - _barProgress) - BarTextFont);
     }

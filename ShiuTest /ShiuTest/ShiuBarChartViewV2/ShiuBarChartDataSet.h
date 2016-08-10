@@ -10,11 +10,34 @@
 
 @interface ShiuBarChartDataSet : NSObject
 
+/**
+   @abstract  yValues
+   @discussion 負責存放 y 軸所有值。
+ */
 @property (nonatomic, strong) NSArray <NSNumber *> *yValues;
-@property (nonatomic, strong) NSString *label;
+
+/**
+   @abstract  typeLabel
+   @discussion 負責存放每個 bar 的 type。
+ */
+@property (nonatomic, strong) NSString *typeString;
+
+/**
+   @abstract  barColor
+   @discussion 設定 barColor 顏色。
+ */
 @property (nonatomic, strong) UIColor *barColor;
+
+/**
+   @abstract  barbackGroudColor
+   @discussion 設定 barbackGroudColor 顏色。
+ */
 @property (nonatomic, strong) UIColor *barbackGroudColor;
 
-- (instancetype)initWithYValues:(NSArray <NSNumber *> *)yValues label:(NSString *)label;
+/**
+   @abstract  initWithYValues
+   @discussion 初始化方法。
+ */
+- (instancetype)initWithYValues:(NSArray <NSNumber *> *)yValues label:(NSString *)typeString;
 
 @end

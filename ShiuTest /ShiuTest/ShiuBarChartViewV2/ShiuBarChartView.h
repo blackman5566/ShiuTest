@@ -7,18 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ShiuLegendView.h"
 #import "ShiuBarChartData.h"
 
 @interface ShiuBarChartView : UIView
-
-/**
-   @abstract  legendView
-   @discussion 實際上也就是這個 app 中負責顯示長出柱狀圖各個顏色代表的 View。
- */
-
-@property (nonatomic, strong, readonly) ShiuLegendView *legendView;
-
 
 /**
    @abstract  chartMargin
@@ -56,10 +47,10 @@
 @property (nonatomic, assign) BOOL isAnimated;
 
 /**
-   @abstract  show
+   @abstract  showBar
    @discussion 開始顯示柱狀圖。
  */
 
-- (void)show;
+- (void)showBar;
 
 @end
