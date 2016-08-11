@@ -65,8 +65,8 @@
     }
 
 
-    // ShiuBarChartDataSet 設定 Bar 有幾種顏色與代表的意思，像以下就設定三種 “次數” “喝水”
-    // itemGap 設定每一個 bar 之間的距離，面前設為 0
+    // 負責儲存每種 Bar 顏色與意義
+    // barGap 設定每一個 bar 之間的距離，面前設為 0
     ShiuBarChartDataSet *barType1 = [[ShiuBarChartDataSet alloc] initWithYValues:yVals1 label:@"次數"];
     [barType1 setBarColor:[UIColor colorWithRed:77.0 / 255.0 green:186.0 / 255.0 blue:122.0 / 255.0 alpha:1.0f]];
     ShiuBarChartDataSet *barType2 = [[ShiuBarChartDataSet alloc] initWithYValues:yVals2 label:@"喝水量"];
@@ -76,17 +76,9 @@
     data.barGap = 0;
 
     // 初始化 shiuBarChartView
-    // chartMargin 設定四個邊界的距離
-    // isAnimated 設定是否要動畫效果
-    // isShowX 設定是否要顯示 X 軸資訊
-    // isShowNumber 設定是否要顯示 bar 上的數字
     for (NSInteger indexPage = 0; indexPage < 2; indexPage++) {
         ShiuBarChartView *shiuBarChartView = [[ShiuBarChartView alloc] initWithFrame:CGRectMake(CGRectGetWidth(frame) * indexPage, 0, CGRectGetWidth(frame), CGRectGetHeight(self.scrollView.frame))];
-        shiuBarChartView.chartMargin = UIEdgeInsetsMake(30, 15, 30, 15);
         shiuBarChartView.data = data;
-        shiuBarChartView.isAnimated = YES;
-        shiuBarChartView.isShowX = YES;
-        shiuBarChartView.isShowNumber = YES;
         [self.scrollView addSubview:shiuBarChartView];
     }
     [self showBarWithPageIndex:0];
@@ -108,18 +100,6 @@
     return ceil(2);
 }
 
-#pragma mark - life cycle
-
-- (id)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self setupInitValue];
-        [self setupPageControl:frame];
-        [self setupScrollView:frame];
-        [self setupShiuBarChartView:frame];
-    }
-    return self;
-}
-
 #pragma mark * override
 
 - (void)drawRect:(CGRect)rect {
@@ -137,6 +117,18 @@
         self.pageControl.currentPage = currentIndex;
         self.originalIndex = currentIndex;
     }
+}
+
+#pragma mark - life cycle
+
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self setupInitValue];
+        [self setupPageControl:frame];
+        [self setupScrollView:frame];
+        [self setupShiuBarChartView:frame];
+    }
+    return self;
 }
 
 @end

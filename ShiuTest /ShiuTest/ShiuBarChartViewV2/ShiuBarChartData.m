@@ -18,18 +18,16 @@
 - (void)setupInitValue:(NSArray <ShiuBarChartDataSet *> *)dataSets {
     self.dataSets = dataSets;
     self.xLabelFontSize = 16;
-    self.yLabelFontSize = 16;
     self.xLabelTextColor = [UIColor grayColor];
-    self.yLabelTextColor = [UIColor grayColor];
     self.barGap = 0;
-    self.yMaxNum = 0;
+    self.yMaxValue = 0;
 }
 
 - (void)setupMaxNumber:(NSArray <ShiuBarChartDataSet *> *)dataSets {
     for (ShiuBarChartDataSet *dataset in dataSets) {
         for (NSNumber *yValue in dataset.yValues) {
-            if (yValue.floatValue > self.yMaxNum) {
-                self.yMaxNum = yValue.floatValue;
+            if (yValue.floatValue > self.yMaxValue) {
+                self.yMaxValue = yValue.floatValue;
             }
         }
     }
@@ -44,12 +42,6 @@
         [self setupMaxNumber:dataSets];
     }
     return self;
-}
-
-#pragma mark - setter / getter
-
-- (BOOL)isGrouped {
-    return self.dataSets.count > 1;
 }
 
 @end

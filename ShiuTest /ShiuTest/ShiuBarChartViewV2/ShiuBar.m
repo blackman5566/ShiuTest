@@ -28,17 +28,22 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-
-        _barLayer = [CAShapeLayer new];
-        [self.layer addSublayer:_barLayer];
-        _barLayer.strokeColor = [UIColor greenColor].CGColor;
-        _barLayer.lineCap = kCALineCapButt;
-        _barLayer.frame = self.bounds;
-
-        self.barWidth = self.bounds.size.width;
-
+        [self setupBarLayer];
+        [self setupInitValue];
     }
     return self;
+}
+
+- (void)setupInitValue {
+    self.barWidth = CGRectGetWidth(self.bounds);
+}
+
+- (void)setupBarLayer {
+    self.barLayer = [CAShapeLayer new];
+    self.barLayer.strokeColor = [UIColor greenColor].CGColor;
+    self.barLayer.lineCap = kCALineCapButt;
+    self.barLayer.frame = self.bounds;
+    [self.layer addSublayer:self.barLayer];
 }
 
 - (void)show {
@@ -88,12 +93,12 @@
 // 設定 bar 寬度
 - (void)setBarWidth:(CGFloat)barWidth {
     _barWidth = barWidth;
-    _barLayer.lineWidth = _barWidth;
+    _barLayer.lineWidth = barWidth;
     [self setProgress];
 }
 
-// 設定背景顏色
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
+    // 設定背景顏色
     if (backgroundColor && ![backgroundColor isEqual:[UIColor clearColor]]) {
         self.backgroundLayer.strokeColor = backgroundColor.CGColor;
     }

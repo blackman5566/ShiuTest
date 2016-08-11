@@ -25,6 +25,7 @@
 #pragma mark - public method
 
 - (void)showBar {
+    // 將所有的 bar 重新長出來
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self setupShiuBar];
     [self setupPetName];
@@ -67,7 +68,7 @@
             CGFloat barX = widthGap + (drawIndex * (groupWidth + widthGap)) + (barTypeIndex * (barWidth + self.data.barGap));
             ShiuBar *bar = [[ShiuBar alloc] initWithFrame:CGRectMake(barX, self.chartMargin.top, barWidth, barHeight)];
             NSNumber *yValue = dataset.yValues[drawIndex];
-            bar.barProgress = isnan(yValue.floatValue / _data.yMaxNum) ? 0 : (yValue.floatValue / _data.yMaxNum);
+            bar.barProgress = isnan(yValue.floatValue / self.data.yMaxValue) ? 0 : (yValue.floatValue / self.data.yMaxValue);
             bar.barColor = dataset.barColor;
             bar.backgroundColor = dataset.barbackGroudColor;
             bar.isAnimated = self.isAnimated;
@@ -81,14 +82,14 @@
 }
 
 - (void)setupPetName {
-     // 初始化 Ｘ軸 文字
+    // 初始化 Ｘ軸 文字
     if (self.data.xLabels) {
         UIFont *font = [UIFont systemFontOfSize:self.data.xLabelFontSize];
         UIColor *stringColor = [UIColor blackColor];
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.alignment = NSTextAlignmentCenter;
         NSDictionary *textStyleDictionary = @{ NSFontAttributeName:font, NSParagraphStyleAttributeName:style, NSForegroundColorAttributeName:stringColor, NSStrokeColorAttributeName:stringColor };
-        
+
         [self.data.xLabels enumerateObjectsUsingBlock: ^(NSString *_Nonnull petName, NSUInteger index, BOOL *_Nonnull stop) {
              // size 取得當前 petName 的文字大小
              // xLabelHeight 計算每一個 Label 高度
@@ -113,12 +114,14 @@
 }
 
 - (void)setupInitValue {
-    self.chartMargin = UIEdgeInsetsMake(30, 30, 30, 30);
-    self.isShowX = YES;
-    self.backgroundColor = [UIColor whiteColor];
-    self.clipsToBounds = YES;
     self.bars = [NSMutableArray array];
     self.stringPointX = [NSMutableArray array];
+    self.chartMargin = UIEdgeInsetsMake(30, 15, 30, 15);
+    self.isShowX = YES;
+    self.isShowNumber = YES;
+    self.isAnimated = YES;
+    self.backgroundColor = [UIColor whiteColor];
+    self.clipsToBounds = YES;
 }
 
 #pragma mark * misc
@@ -148,11 +151,10 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, 0.5);
     CGContextSetStrokeColorWithColor(context, [UIColor grayColor].CGColor);
-    if (self.isShowX) {
-        CGContextMoveToPoint(context, self.chartMargin.left - XAxisMarginLeft, self.bounds.size.height - self.chartMargin.bottom + 0.5);
-        CGContextAddLineToPoint(context, self.bounds.size.width - self.chartMargin.right + XAxisMarginRight, self.bounds.size.height - self.chartMargin.bottom + 0.5);
-        CGContextStrokePath(context);
-    }
+    CGContextMoveToPoint(context, self.chartMargin.left - XAxisMarginLeft, self.bounds.size.height - self.chartMargin.bottom + 0.5);
+    CGContextAddLineToPoint(context, self.bounds.size.width - self.chartMargin.right + XAxisMarginRight, self.bounds.size.height - self.chartMargin.bottom + 0.5);
+    CGContextStrokePath(context);
+
 }
 
 #pragma mark - life cycle
