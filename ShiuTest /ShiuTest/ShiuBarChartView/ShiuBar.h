@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+// 決定 textLabel 的方向
+typedef enum {
+    LabelTextDirectionLeft,
+    LabelTextDirectionRight
+} LabelTextDirection;
+
 @interface ShiuBar : UIView
 
 /**
@@ -72,8 +78,14 @@
 @property (nonatomic, assign) CGFloat barRadius;
 
 /**
- @abstract  show
- @discussion 動畫效果顯示 bar
+   @abstract  textLabelDirection
+   @discussion 設定要顯示的字 position 靠近左或是右的位置
+ */
+@property (nonatomic, assign) LabelTextDirection labelTextDirection;
+
+/**
+   @abstract  show
+   @discussion 動畫效果顯示 bar
  */
 - (void)show;
 

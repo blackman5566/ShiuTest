@@ -55,7 +55,7 @@
     // 產生假資料 有多少數量就代表會產生幾筆資料
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
-    double mult = 5 * 1000.f;
+    double mult = 5 * 500.f;
     for (int i = 0; i < 3; i++) {
         double val = (double)(arc4random_uniform(mult) + 3.0);
         [yVals1 addObject:@(val)];

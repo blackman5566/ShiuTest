@@ -112,7 +112,6 @@
     self.xValue = [[NSMutableArray alloc] init];
     self.yValue = [[NSMutableArray alloc] init];
 
-    //[self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 100]];
     for (int i = 1; i < 40; i++) {
         [self.xValue addObject:[NSString stringWithFormat:@"%d", i]];
         [self.yValue addObject:[NSString stringWithFormat:@"%u", 1 + arc4random() % 500]];

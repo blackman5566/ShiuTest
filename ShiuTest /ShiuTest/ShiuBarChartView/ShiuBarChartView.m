@@ -22,7 +22,7 @@
 
 @implementation ShiuBarChartView
 
-#pragma mark - public method
+#pragma mark - public instance method
 
 - (void)showBar {
     // 將所有的 bar 重新長出來
@@ -72,7 +72,7 @@
             bar.barColor = dataset.barColor;
             bar.backgroundColor = dataset.barbackGroudColor;
             bar.isAnimated = self.isAnimated;
-            bar.barRadius = 40;
+            bar.labelTextDirection = barTypeIndex ? LabelTextDirectionRight : LabelTextDirectionLeft;
             [self isShowLegendView:bar value:yValue barTypeIndex:barTypeIndex];
             [self.bars addObject:bar];
             [self addSubview:bar];
